@@ -6,6 +6,7 @@ body {
 }
 
 div.login {
+    margin-top: 100px;
     border: 10px solid #003f6f;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;

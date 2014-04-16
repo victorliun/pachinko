@@ -4,19 +4,23 @@
     <link rel="stylesheet" href="../static/css/normalize.css" type="text/css">
     <link rel="stylesheet" href="../static/css/base.css" type="text/css">
     <title>{%block title%}Pachinko{%endblock%}</title>
+    {%block extracss%}{%endblock%}
+
+    {%block extrajs%}{%endblock%}
   </head>
   <body>
     <div class="main">
       <h1>{%block page_header%}Home{%endblock%}</h1>
       <div class="navigation">
         <ul>
-          <li><a href="/home"><button>Home</button></a></li>
-          <li><a href="/analysis"><button>Analysis</button></a></li>
-          <li><a href="/set-crawler"><button>Set Crawler</button></a></li>
-          <li><a href="/update"><button>Update Hall or Machine Numbers</button></a></li>
-          <li><a href="/logout"><button>LOGOUT</button></a></li>
+          <li><a href="/analysis">Home</a></li>
+          <li><a href="/analysis">Analysis</a></li>
+          <li><a href="/set-crawler">Set Crawler</a></li>
+          <li><a href="/update">Update Hall or Machine Numbers</a></li>
+          <li><a href="/logout">LOGOUT</a></li>
         </ul>
       </div>
+      <div style="clear:both;"></div>
       <div class="content">
         {%block content%}{%endblock%}
       </div>

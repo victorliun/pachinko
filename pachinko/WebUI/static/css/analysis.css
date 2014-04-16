@@ -1,0 +1,64 @@
+.category ul {
+    margin: 16px;
+    clear: both;
+    float: left;
+    font-size: 16px;
+    height: 30px;
+    padding: 0;
+    position: relative;
+    line-height: 30px;
+    list-style: none outside none;
+}
+
+.category ul li {
+    color: white;
+    display: block;
+    float: left;
+    font-size: small;
+    margin: 0 4px;
+    background-color: #003f6f; 
+    width: 213px;
+    height: 30px;
+    padding: 0 4px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+}
+
+.category ul li a{
+    color: white;
+    text-decoration: none;
+
+}
+
+.category button {
+    width: 209px;
+    padding: 0px;
+    background-color: inherit;
+    color: white;
+    border: none;
+}
+
+div#date {
+    margin-top: 10px;
+    text-align: center;
+    color: black;
+}
+
+div#tables {
+    margin: 10px 150px;
+    color: black;
+}
+
+table td {
+    height: 16px;
+}
+
+table#averages{
+    margin: 10px auto;
+}
+
+table#tabledata{
+    margin:20px auto;
+}
+

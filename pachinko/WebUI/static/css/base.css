@@ -57,13 +57,14 @@ div.main {
 .navigation ul li a{
     color: white;
     text-decoration: none;
-
-}
-
-.navigation button {
     width: 209px;
     padding: 0px;
-    background-color: inherit;
-    color: white;
-    border: none;
+    display: block;
 }
+
+/***
+ * Simply apply class="clearfix" to the elements cantaining the floats.
+ ***/
+.clearfix:before, .clearfix:after {content: "", display: table;}
+.clearfix:after {clear: both;}
+.clearfix {zoom: 1;}
