@@ -1,0 +1,132 @@
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<!-- <script src="amcharts/amcharts.js"></script> -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/amcharts/2.11.3/amcharts.js"></script>
+		<script src="charts.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+	</head>
+
+	<body>
+		<center>
+			<table cellspacing=30>
+				<tr>
+					<td>
+						<center>
+							<b>Impressions per day</b>
+							<br />
+							From: <input type="text" id="imp-day-datepicker">
+							To: <input type="text" id="imp-day-datepicker2">
+						</center>
+						<div id="impday" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+					<td>
+						<center>
+							<b>Impressions per month</b>
+							<br />
+							From: <input type="text" id="imp-month-datepicker">
+							To: <input type="text" id="imp-month-datepicker2">
+						</center>
+						<div id="impmonth" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<center>
+							<b>OS per day</b>
+							<br />
+							From: <input type="text" id="os-day-datepicker">
+							To: <input type="text" id="os-day-datepicker2">
+						</center>
+						<div id="osday" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+					<td>
+						<center>
+							<b>OS per month</b>
+							<br />
+							From: <input type="text" id="os-month-datepicker">
+							To: <input type="text" id="os-month-datepicker2">
+						</center>
+						<div id="osmonth" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<center>
+							<b>Unique Users per day</b>
+							<br />
+							From: <input type="text" id="uniq-day-datepicker">
+							To: <input type="text" id="uniq-day-datepicker2">
+						</center>
+						<div id="uniqday" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+					<td>
+						<center>
+							<b>Unique Users per month</b>
+							<br />
+							From: <input type="text" id="uniq-month-datepicker">
+							To: <input type="text" id="uniq-month-datepicker2">
+						</center>
+						<div id="uniqmonth" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<center>
+							<b>Unique URL per day</b>
+							<br />
+							From: <input type="text" id="url-day-datepicker">
+							To: <input type="text" id="url-day-datepicker2">
+						</center>
+						<div id="urlday" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+					<td>
+						<center>
+							<b>Unique URL per month</b>
+							<br />
+							From: <input type="text" id="url-month-datepicker">
+							To: <input type="text" id="url-month-datepicker2">
+						</center>
+						<div id="urlmonth" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+				</tr>
+			</table>
+		</center>
+
+	</body>
+
+</html>

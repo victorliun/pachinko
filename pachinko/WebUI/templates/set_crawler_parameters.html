@@ -1,0 +1,179 @@
+
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script>
+		function uploadformdata()
+		{
+			var url = "/getCrawlerData";
+		$.getJSON(url, function(data) {
+  	 		 for (var i in data) {
+       				$('input[name=username]').val(data[i]['username']);
+        			$('input[name=password]').val(data[i]['password']);
+			        $('input[name=targetHallocde]').val(data[i]['targetHallocde']);
+			        $('input[name=targetmachinetype]').val(data[i]['targetmachinetype']);
+			        $('input[name=startFirstCrawlTime]').val(data[i]['startFirstCrawlTime']);
+			        $('input[name=startLastCrawlTime]').val(data[i]['startLastCrawlTime']);
+			        $('input[name=startingDate]').val(data[i]['startingDate']);
+			        $('input[name=finishingDate]').val(data[i]['finishingDate']);
+    			}
+		});
+		}
+	</script>
+	<script>	
+		 function getPreviousData(buttonname)
+		 {	
+			alert(buttonname);
+			var url = "/getPreviousData";
+			$.getJSON(url, function(data) {
+				if(buttonname=='targetmachinetype')
+				{
+					alert("machine");
+					$('input[name=targetmachinetype]').val(data[1]['targetmachinetype']);
+			        }
+				if(buttonname=='targetHallocde')
+				{
+					alert("erere");
+					$('input[name=targetHallocde]').val(data[1]['targetHallocde']);
+				}
+			});
+		 }
+	</script>
+</head>
+	<body onload="uploadformdata();">
+		{{ msg }}
+		  <center>
+			<br/>
+			<form action='' method='post' name=showcrawlerData id=showcrawlerData>
+                        <table>
+                                <tr>
+                                        <td>
+                                                <center>
+                                             		<p>  A. Yahoo! Login</p>
+						</center>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<center>
+							<input type =  text placeholder = Username name=username id=username>
+						</center>
+					</td>
+				</tr>
+				 <tr>
+                                        <td>
+                                                <center>
+                                                        <input type = password placeholder = Password name=password id=password>
+                                                </center>
+                                        </td>
+                                </tr>
+				<br/>
+ 				<tr>
+                                        <td>
+                                                <center>
+                                                        <p> B1. Target Hallcode </p>
+                                                </center>
+                                        </td>
+                                </tr>
+				<tr>
+                                        <td>
+                                                <center>
+                                                        <input type = text name=targetHallocde id=targetHallocde>
+                                                </center>
+                                        </td>
+					 <td>
+                                                <center>
+                                                        <input type= button value=previous onclick="getPreviousData('targetHallocde')">
+                                                </center>
+                                        </td>
+                                </tr>
+
+				 <br/>
+                                <tr>
+                                        <td>
+                                                <center>
+                                                        <p> C1. Target MachineType </p>
+                                                </center>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <center>
+                                                        <input type = text name = targetmachinetype id=targetmachinetype>
+                                                </center>
+                                        </td>
+                                         <td>
+                                                <center>
+                                                        <input type= button value=previous onclick="getPreviousData('targetmachinetype')">
+                                                </center>
+                                        </td>
+                                </tr>
+				<br/>
+                                <tr>
+                                        <td>
+                                                <center>
+                                                        <p> D1. Start of first crawl (Input Japan Time) </p>
+                                                </center>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <center>
+                                                        <input type = text name = startFirstCrawlTime id=startFirstCrawlTime>
+                                                </center>
+                                        </td>
+				</tr>
+				<br/>
+				 <tr>
+                                        <td>
+                                                <center>
+                                                        <p> E1. Start of last crawl (Input Japan Time) </p>
+                                                </center>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <center>
+                                                        <input type = text name = startLastCrawlTime id=startLastCrawlTime>
+                                                </center>
+                                        </td>
+                                </tr>
+				<br/>
+				  <tr>
+                                        <td>
+                                                <center>
+                                                        <p> F1. Starting Date </p>
+                                                </center>
+                                        </td>
+                                        <td>
+                                                <center>
+                                                 	<p>  G1. Finishing Date </p>
+                                                </center>
+                                        </td>
+                                </tr>
+				 <tr>
+                                        <td>
+                                                <center>
+                                                	<input type = text name = startingDate id=startingDate>
+						</center>
+                                        </td>
+                                        <td>
+                                                <center>
+                                                        <input type = text name = finishingDate id=finishingDate>
+                                                </center>
+                                        </td>
+                                </tr>
+				<tr>
+					<td>
+						 <center>
+                                                        <input type = Submit id = Set value= Set>
+                                                </center>
+                                        </td>
+                                </tr>
+			</table>
+			</form>
+		</center>
+	</body>
+</html>
+

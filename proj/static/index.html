@@ -1,0 +1,199 @@
+
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<!-- <script src="amcharts/amcharts.js"></script> -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/amcharts/2.11.3/amcharts.js"></script>
+		<script src="charts.js"></script>
+		<script>
+		    function updateNext(el, nextName) {
+			if(el == "hallcode")
+        			var full_url ="/getHallcode/column=hallcode";
+			else
+				var url_arg = el.value;
+				if(nextName == "machinetype")
+					var full_url ="/getMachineDetails/column=hallcode/value="+url_arg+"/distinctcol=machine_type";
+				else if (nextName == "machinenumber")
+					var full_url ="/getMachineDetails/column=machine_type/value="+url_arg+"/distinctcol=machine";
+			alert(full_url);	
+			var options
+        		var txtStrng = '';
+        		//grab ajax data
+        		$.ajax({
+            			async: false,
+       			     	url: full_url,
+            			//type: 'POST',
+            			dataType: 'json',
+            			success: function(data, textStatus, jqXHR)
+                    		{
+                        		 //data - response from server
+                			options= data;
+                		},
+            			error: function (jqXHR, textStatus, errorThrown)
+                		{
+                			alert(textStatus)
+               		 		alert(jqXHR)
+        			}
+        		});
+        		//create the option list
+			txtStrng += "<option value=blank> </option>";
+			$.each( options, function(i,val) {
+            			txtStrng += "<option value=\"" + val + "\">";
+            			txtStrng += val ;
+            			txtStrng += "</option>";
+        		});
+			 //clear the option list
+		        $('#'+nextName).text('');
+		        //attach the option list
+		        $(txtStrng).appendTo('#'+nextName);
+
+			}
+		</script>
+		<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+	</head>
+
+	<body onload="updateNext('hallcode', 'hallcode')">
+		<center>
+			<table cellspacing=50>
+				<tr>
+					<td>
+						<center>
+							HALL CODE : <select id="hallcode" onchange="updateNext(this, 'machinetype')">
+							</select>
+							MACHINE TYPE : <select id="machinetype" onchange="updateNext(this, 'machinenumber')">
+							</select>
+							MACHINE NUMBER : <select id="machinenumber">
+							</select>
+						</center>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<center>
+							<b>Spin Count per day</b>
+							<br />
+							From: <input type="text" id="spincount-day-datepicker">
+							To: <input type="text" id="spincount-day-datepicker2">
+						</center>
+						<div id="spincountday" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<center>
+							<b>Win Spin Count per day</b>
+							<br />
+							From: <input type="text" id="winspincount-day-datepicker">
+							To: <input type="text" id="winspincount-day-datepicker2">
+						</center>
+						<div id="winspincountday" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<center>
+							<b>Closing Spin Count per day</b>
+							<br />
+							From: <input type="text" id="closingspincount-day-datepicker">
+							To: <input type="text" id="closingspincount-day-datepicker2">
+						</center>
+						<div id="closingspincountday" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<center>
+							<b>Spin Count for Single Wins per day</b>
+							<br />
+							From: <input type="text" id="singlewinsspincount-day-datepicker">
+							To: <input type="text" id="singlewinsspincount-day-datepicker2">
+						</center>
+						<div id="singlewinsspincountday" style="width: 500px; height: 342px;"></div>
+						<div style="margin-left:35px;">
+						    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+						    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+						</div>
+					</td>
+				</tr>
+                                <tr>
+                                        <td>
+                                                <center>
+                                                        <b>Renchan Wins per day</b>
+                                                        <br />
+                                                        From: <input type="text" id="renchan-day-datepicker">
+                                                        To: <input type="text" id="renchan-day-datepicker2">
+                                                </center>
+                                                <div id="renchanday" style="width: 500px; height: 342px;"></div>
+                                                <div style="margin-left:35px;">
+                                                    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+                                                    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+                                                </div>
+                                        </td>
+                                </tr>
+                                <tr>
+                                        <td>
+                                                <center>
+                                                        <b>Total Wins per day</b>
+                                                        <br />
+                                                        From: <input type="text" id="totalwins-day-datepicker">
+                                                        To: <input type="text" id="totalwins-day-datepicker2">
+                                                </center>
+                                                <div id="totalwinsday" style="width: 500px; height: 342px;"></div>
+                                                <div style="margin-left:35px;">
+                                                    <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+                                                    <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+                                                </div>
+                                        </td>
+                                </tr>
+
+			</table>
+		</center>
+
+	</body>
+<script>
+    function updateNext(el, nextName) {
+	alert("ddcc");
+        var url_arg = el.value;
+        var full_url ="/fillDropBox/column=hallcode";
+        var options
+        var txtStrng = '';
+        //grab ajax data
+        $.ajax({
+            async: false,
+            url: full_url,
+            //type: 'POST',
+            dataType: 'json',
+            success: function(data, textStatus, jqXHR)
+                    {
+                         //data - response from server
+                options= data;
+		alert("heff");
+                },
+            error: function (jqXHR, textStatus, errorThrown)
+                {
+                alert(textStatus)
+                alert(jqXHR)
+                alert(errorThrown)
+        }
+        });
+        //create the option list
+        $.each( options, function(i,val) {
+            txtStrng += "<option value=\"" + val + "\">";
+            txtStrng += val ;
+            txtStrng += "</option>";
+        });
+</script>
+</html>

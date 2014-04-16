@@ -1,0 +1,28 @@
+
+<html>
+<p><b><i>View Single Machine</i></b></p>
+<Form>
+<p> HALL CODE : <select>
+  <option value="27081001">27081001</option>
+  <option value="2712903">2712903</option>
+  <option value="2712904">2712904</option>
+  <option value="2712905">2712905</option>
+</select> </p>
+<p> MACHINE TYPE : <select>
+  <option value="119328">119328</option>
+  <option value="119350">119350</option>
+  <option value="119354">119354</option>
+  <option value="119356">119356</option>
+  <option value="119357">119357</option>
+  <option value="119358">119358</option>
+</select> </p>
+<p> MACHINE NUMBER : <select>
+  <option value="751">751</option>
+  <option value="752">752</option>
+  <option value="753">753</option>
+  <option value="754">754</option>
+</select> </p>
+<input type="submit" value="Get Data">
+<input type="submit" value="Get Graphs">
+</Form>
+</html>

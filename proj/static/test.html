@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>TechRepublic.com Example</title>
+<script src="chart.js"></script>
+<script type="text/javascript">
+function createChart() {
+var data = {
+labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+datasets: [
+{
+fillColor: "rgba(225,0,0,1)",
+strokeColor: "rgba(225,0,0,1)",
+data: [12, 16, 13, 15, 18, 21]
+},
+{
+fillColor: "rgba(0,26,225,1)",
+strokeColor: "rgba(0,26,225,1)",
+data: [18, 16, 17, 17, 18, 16]
+},
+{
+fillColor: "rgba(24,31,28,0.5)",
+strokeColor: "rgba(24,31,28,0.5)",
+data: [11, 16, 9, 10, 17, 17]
+}  ]  }
+var cht = document.getElementById('trChart');
+var ctx = cht.getContext('2d');
+var barChart = new Chart(ctx).Bar(data);
+}
+</script></head>
+<body onload="createChart();">
+<canvas id="trChart" width="400" height="400"></canvas>
+</body></html>

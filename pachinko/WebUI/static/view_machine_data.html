@@ -1,0 +1,84 @@
+
+<html>
+	<head>
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<!-- <script src="amcharts/amcharts.js"></script> -->
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/amcharts/2.11.3/amcharts.js"></script>
+		<script src="tables.js"></script>
+		<script src="common.js"></script>
+		<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+	</head>
+
+	<body onload="updateNext('hallcode','hallcode');updateTable(this, 'tabledata');">
+		<center>
+			<table cellspacing=50>
+				<tr>
+					<td>
+						<center>
+							HALL CODE : <select id="hallcode" onchange="updateNext(this, 'machinetype')">
+							</select>
+							MACHINE TYPE : <select id="machinetype" onchange="updateNext(this, 'machinenumber')">
+							</select>
+							MACHINE NUMBER : <select id="machinenumber" onchange="updateTable(this, 'tabledata')">
+							</select>
+						</center>
+					</td>
+				</tr>
+				<tr>
+					 <td>
+                                                <center>
+							From: <input type="text" id="from-datepicker">
+							To: <input type="text" id="to-datepicker">
+						</center>
+                                        </td>
+
+				</tr>
+				<tr>
+					<td>
+						Averages:
+						<table border=1>
+							<tr>
+								<th>Peak Points
+								<th>Total Spins
+								<th>Total Wins
+								<th>Win/Spin Ratio
+								<th>Renchan Series
+								<th>Av Single Win Spins
+								<th>1st Win Spins 
+								<th>Closing Spin Count
+							</tr>
+							<tr>
+								<td id="peak_points">
+								<td id="total_spins">
+								<td id="total_wins">
+								<td id="win_spin_ratio">
+								<td id="renchan_series">
+								<td id="av_single_win_spins">
+								<td id="first_win_spins">
+								<td id="closing_spin_count">
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<center>
+							<table id="tabledata" border=1>
+								<thead>
+								<tr>
+									<th>Date</th>
+									<th>S/R/C/ </th>
+									<th>Win </th>
+									<th>Time </th>
+									<th>Spin </th>
+									<th>Out </th>
+									<th>Range </th>
+								</tr>
+								</thead>
+                                                        </table>
+						</center>
+					</td>
+				</tr>
+	</body>
+</html>

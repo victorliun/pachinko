@@ -1,0 +1,49 @@
+
+<html>
+<body>
+<select id="type" onchange="updateNext(this, 'category')">
+    <option value="a">A</option>
+    <option value="b">B</option>
+    <option value="c">C</option>
+</select>
+<select id="category" onchange="updateNext(this, 'topic')">
+</select>
+<select id="topic" onchange="updateNext(this, 'worksheet')">
+</select>
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script>
+    function updateNext(el, nextName) {
+        var url_arg = el.value;
+        var full_url ="/fillDropBox/column=hallcode";
+        var options 
+	var txtStrng = '';
+        //grab ajax data
+        $.ajax({
+            async: false,
+            url: full_url,
+            //type: 'POST',
+            dataType: 'json',
+	    success: function(data, textStatus, jqXHR)
+		    {
+       			 //data - response from server
+		options= data;
+    		},
+    	    error: function (jqXHR, textStatus, errorThrown)
+    		{
+		alert(textStatus)
+		alert(jqXHR) 
+		alert(errorThrown)
+    	}
+        });
+        //create the option list
+        $.each( options, function(i,val) {
+            txtStrng += "<option value=\"" + val + "\">";
+            txtStrng += val ;
+            txtStrng += "</option>";
+        });
+        //clear the option list
+        $('#'+nextName).text('');
+        //attach the option list
+        $(txtStrng).appendTo('#'+nextName);
+    }
+</script>
