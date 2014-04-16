@@ -71,18 +71,32 @@ def login():
 		print request.form['password']
 		if(request.form['username'] == 'app' and request.form['password'] == 'password'):
 			session['username'] = request.form['username']
-		return redirect(url_for('index'))
-	return render_template('login.html')
+		return redirect(url_for('home'))
+	return render_template('login_page.html')
 
 @app.route('/logout')
 def logout():
 	# remove the username from the session if it's there
 	session.pop('username', None)
-	return redirect(url_for('index'))
+	return redirect(url_for('login'))
 
 @app.route('/home')
 def home():
-	return render_template('index.html')
+	return render_template('home.html')
+
+@app.route('/analysis')
+def analysis():
+    return render_template('get_data.html')
+
+@app.route('/set-crawler')
+def set_crawler():
+    return render_template('set_crawler.html')
+
+@app.route('/update')
+def update():
+    return render_template('update_hall_and_machine.html')
+
+
 
 @app.route('/viewData')
 def viewData():

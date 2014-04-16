@@ -1,0 +1,69 @@
+body {
+    width: 1200px;
+    margin: 0 auto; 
+    margin-top: 20px; 
+    background-color: #577B96;
+}
+
+div.main {
+    border: 10px solid #003f6f;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    color: white;
+    background-color: #EDEDED;
+    min-height: 500px;
+}
+
+.main h1 {
+    line-height: 60px;
+    margin: 0px;
+    padding-left: 20px;
+    background-color: #003f6f;
+}
+
+
+.navigation {
+    float: left;
+}
+
+.navigation ul {
+    margin: 16px;
+    clear: both;
+    float: left;
+    font-size: 16px;
+    height: 30px;
+    padding: 0;
+    position: relative;
+    line-height: 30px;
+    list-style: none outside none;
+}
+
+.navigation ul li {
+    color: white;
+    display: block;
+    float: left;
+    font-size: small;
+    margin: 0 4px;
+    background-color: #003f6f; 
+    width: 213px;
+    height: 30px;
+    padding: 0 4px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+}
+
+.navigation ul li a{
+    color: white;
+    text-decoration: none;
+
+}
+
+.navigation button {
+    width: 209px;
+    padding: 0px;
+    background-color: inherit;
+    color: white;
+    border: none;
+}
