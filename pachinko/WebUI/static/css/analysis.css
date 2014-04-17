@@ -28,7 +28,9 @@
 .category ul li a{
     color: white;
     text-decoration: none;
-
+    width: 209px;
+    padding: 0px;
+    display: block;
 }
 
 .category button {
@@ -62,3 +64,12 @@ table#tabledata{
     margin:20px auto;
 }
 
+ul#hallcode, ul#machinetype, ul#machinenumber{
+    margin-left: -8px;
+    margin-top: 0px;
+    display: none;
+}
+
+ul#hallcode li, ul#machinetype li, ul#machinenumber li{
+    cursor: pointer;
+}

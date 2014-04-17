@@ -41,9 +41,9 @@ $(document).ready(function () {
 	function updateTable(el, nextName) {
                                 var options
                                 var txtStrng = '';
-				hallcode = $("#hallcode option:selected").text();
-   				machinetype = $("#machinetype option:selected").text();
-		   		machinenumber = $("#machinenumber option:selected").text();
+				hallcode = $("#hallcode li.selected").text();
+   				machinetype = $("#machinetype li.selected").text();
+		   		machinenumber = $("#machinenumber li.selected").text();
 				startDate = $("#from-datepicker").val();
 				endDate =  $("#to-datepicker").val();
                                 var full_url = "/Data?startDate=" + startDate + "&endDate=" + endDate + "&hallcode=" + hallcode + "&machinetype=" + machinetype +"&machinenumber=" + machinenumber;
