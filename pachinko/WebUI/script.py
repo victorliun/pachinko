@@ -82,7 +82,7 @@ def logout():
 
 @app.route('/home')
 def home():
-	return render_template('home.html')
+	return redirect(url_for('analysis'))#render_template('home.html')
 
 @app.route('/analysis')
 def analysis():
