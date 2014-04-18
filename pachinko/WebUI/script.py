@@ -232,31 +232,32 @@ def get_machine_type_details():
             elif cl.has_key('range') and cl['range'] != '--':
                 ranges.append(cl['range'])
         if ranges:
-            resp['range'] = int(round(reduce(lambda x,y: x+y, ranges)/len(ranges)))
+            resp['range'] = int(round(reduce(lambda x,y: int(x)+int(y), ranges)/len(ranges)))
         else:
             resp['range'] = '0'
         win_spins = [cl['spin_count_of_win'] for cl in cllc if cl['spin_count_of_win'] != '--']
         if win_spins:
-            resp['win_spin'] = int(round(reduce(lambda x,y:x+y, win_spins)/len(win_spins)))
+            resp['win_spin'] = int(round(reduce(lambda x,y:x+y, win_spins)))
         else:
-            resp['win_spin'] = '0'
+            resp['win_spin'] = 0
         
-        single_wins = [cl['spin_count_of_win'] for cl in cllc if cl['spin_count_of_win'] != '--']
+        single_wins = [cl['spin_count_of_win'] for cl in cllc \
+            if cl['renchan'] == 0 and cl['spin_count_of_win'] != '--']
         if single_wins:
             resp['single_win'] = int(round(reduce(lambda x,y:x+y, single_wins)/len(single_wins)))
         else:
-            resp['single_win'] = '0'
+            resp['single_win'] = 0
 
         renchans = [cl['renchan'] for cl in cllc if cl['renchan'] != '--']
         if renchans:
-            resp['renchan'] = round(reduce(lambda x,y:x+y, renchans)/len(renchans))
+            resp['renchan'] = reduce(lambda x,y:x+y, renchans)
         else:
-            resp['renchan'] = '0'
+            resp['renchan'] = 0
         totalwins = [cl['win_number'] for cl in cllc if cl['win_number'] != '--']
         if totalwins:
-            resp['total_win'] = int(round(reduce(lambda x,y:x+y, totalwins)/len(totalwins)))
+            resp['total_win'] = len(totalwins)
         else:
-            resp['total_win'] = '0'
+            resp['total_win'] = 0
         res.append(resp)
     return json.dumps(res, default=json_util.default)
 
