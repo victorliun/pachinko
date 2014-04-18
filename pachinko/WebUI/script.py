@@ -255,12 +255,18 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
         resp['machine'] = machine
         ranges = []
         for cl in cllc:
-            if cl.has_key('machine_range') and cl['machine_range'] != '--':
-                ranges.append(cl['machine_range'])
-            elif cl.has_key('range') and cl['range'] != '--':
-                ranges.append(cl['range'])
+            if cl.has_key('machine_range'):
+                try:
+                    ranges.append(int(cl['machine_range']))
+                except ValueError, err:
+                    print "Range:%s is not a integer." %cl['machine_range']
+            elif cl.has_key('range'):
+                try:
+                    ranges.append(int(cl['range']))
+                except ValueError, err:
+                    print "Range:%s is not a integer." %cl['range']
         if ranges:
-            resp['range'] = int(round(reduce(lambda x,y: int(x)+int(y), ranges)/len(ranges)))
+            resp['range'] = int(round(reduce(lambda x,y: x+y, ranges)/len(ranges)))
         else:
             resp['range'] = 0
         win_spins = [cl['spin_count_of_win'] for cl in cllc if cl['spin_count_of_win'] != '--']
