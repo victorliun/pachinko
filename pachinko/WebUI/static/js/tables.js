@@ -103,6 +103,8 @@ $(document).ready(function () {
 					else if(!ranges_peaks[obj.date][obj.machine])
 						ranges_peaks[obj.date][obj.machine] = parseInt(obj.machine_range);
 				}
+                else
+                    txtStrng += "<td>--</td>";
                                 txtStrng += "</tr>";
                             });
 			var temp = 0;
