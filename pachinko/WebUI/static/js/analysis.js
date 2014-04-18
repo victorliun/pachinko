@@ -14,7 +14,8 @@ $(document).ready(function(){
         $("#hallcode").hide();
         $("#hallcode li.selected").removeClass("selected");
         $(this).addClass("selected");
-        updateNext(this, 'machinetype')
+        updateNext(this, 'machinetype');
+        show_machine_types_from_hallcode();
         $("a#by_hall").focus();
     });
     
@@ -34,6 +35,7 @@ $(document).ready(function(){
             next.addClass("selected");
             $("a#by_hall").html(next.html());
             updateNext(next,"machinetype");
+            show_machine_types_from_hallcode();
         }
         else if (event.keyCode == 37){// left arrow key down
             var selected = $("#hallcode li.selected");
@@ -49,6 +51,7 @@ $(document).ready(function(){
             prev.addClass("selected");
             $("a#by_hall").html(prev.html());
             updateNext(prev,"machinetype");
+            show_machine_types_from_hallcode();
         }      
     });
     //by machine type

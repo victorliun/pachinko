@@ -52,7 +52,7 @@ div#tables{
     color: black;
 }
 
-div#machine_type_table {
+div#machine_type_table, div#hall_table{
     display: none;
     margin: 10px 350px;
     color: black;

@@ -217,9 +217,37 @@ def get_machine_type_details():
     endDate = request.args.get('endDate', '')
     hallcode = request.args.get('hallcode', '')
     machinetype = request.args.get('machinetype', '')
-    machines = dbConn.getMachineDetails("hallcode", hallcode, "machine_type",machinetype, "machine")
     res = []
     #print machines
+    if hallcode and machinetype:
+        res = summary_machine_data(startDate,endDate,hallcode,machinetype)
+    elif hallcode and not machinetype:
+        machine_types = dbConn.getMachineDetails("hallcode", hallcode, '','', "machine_type")
+        for mach_type in machine_types:
+            machine_datas = summary_machine_data(startDate,endDate,hallcode,mach_type)
+            machine_type_data = {}
+            machine_type_data['machine_type'] = mach_type
+            machine_range = [ machine['range'] for machine in machine_datas]
+            machine_type_data['range'] = int(round(reduce(lambda x,y: x+y, machine_range)/len(machine_range)))
+            machine_winspin = [ machine['win_spin'] for machine in machine_datas]
+            machine_type_data['win_spin'] = int(round(reduce(lambda x,y: x+y, machine_winspin)/len(machine_winspin)))
+            machine_single_win = [ machine['single_win'] for machine in machine_datas]
+            machine_type_data['single_win'] = int(round(reduce(lambda x,y: x+y, machine_single_win)/len(machine_single_win)))
+            machine_renchan = [ machine['renchan'] for machine in machine_datas]
+            machine_type_data['renchan'] = int(round(reduce(lambda x,y: x+y, machine_renchan)/len(machine_renchan)))
+            machine_total_win = [ machine['total_win'] for machine in machine_datas]
+            machine_type_data['total_win'] = int(round(reduce(lambda x,y: x+y, machine_total_win)))
+            res.append(machine_type_data)
+
+    return json.dumps(res, default=json_util.default)
+
+
+def summary_machine_data(startDate,endDate,hallcode,machinetype):
+    """
+    This function will summary data from each machine.
+    """
+    res = []
+    machines = dbConn.getMachineDetails("hallcode", hallcode, "machine_type",machinetype, "machine")
     for machine in machines:
         cllc = dbConn.get_collections(startDate,endDate,hallcode,machinetype,machine)
         length = len(cllc)
@@ -234,7 +262,7 @@ def get_machine_type_details():
         if ranges:
             resp['range'] = int(round(reduce(lambda x,y: int(x)+int(y), ranges)/len(ranges)))
         else:
-            resp['range'] = '0'
+            resp['range'] = 0
         win_spins = [cl['spin_count_of_win'] for cl in cllc if cl['spin_count_of_win'] != '--']
         if win_spins:
             resp['win_spin'] = int(round(reduce(lambda x,y:x+y, win_spins)))
@@ -259,7 +287,7 @@ def get_machine_type_details():
         else:
             resp['total_win'] = 0
         res.append(resp)
-    return json.dumps(res, default=json_util.default)
+    return res
 
 @app.route('/getHallcode/column=<column>')
 @crossdomain(origin='*')
