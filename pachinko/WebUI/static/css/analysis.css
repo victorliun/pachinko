@@ -47,8 +47,14 @@ div#date {
     color: black;
 }
 
-div#tables {
+div#tables{
     margin: 10px 150px;
+    color: black;
+}
+
+div#machine_type_table {
+    display: none;
+    margin: 10px 350px;
     color: black;
 }
 

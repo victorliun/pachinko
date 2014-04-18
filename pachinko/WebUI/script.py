@@ -210,6 +210,55 @@ def getData():
     #return json.dumps(list, cls=Encoder)
     return json.dumps(list, default=json_util.default)
 
+@app.route('/get_machine_type_details')
+@crossdomain(origin='*')
+def get_machine_type_details():
+    startDate = request.args.get('startDate', '')
+    endDate = request.args.get('endDate', '')
+    hallcode = request.args.get('hallcode', '')
+    machinetype = request.args.get('machinetype', '')
+    machines = dbConn.getMachineDetails("hallcode", hallcode, "machine_type",machinetype, "machine")
+    res = []
+    #print machines
+    for machine in machines:
+        cllc = dbConn.get_collections(startDate,endDate,hallcode,machinetype,machine)
+        length = len(cllc)
+        resp = {}
+        resp['machine'] = machine
+        ranges = []
+        for cl in cllc:
+            if cl.has_key('machine_range') and cl['machine_range'] != '--':
+                ranges.append(cl['machine_range'])
+            elif cl.has_key('range') and cl['range'] != '--':
+                ranges.append(cl['range'])
+        if ranges:
+            resp['range'] = int(round(reduce(lambda x,y: x+y, ranges)/len(ranges)))
+        else:
+            resp['range'] = '0'
+        win_spins = [cl['spin_count_of_win'] for cl in cllc if cl['spin_count_of_win'] != '--']
+        if win_spins:
+            resp['win_spin'] = int(round(reduce(lambda x,y:x+y, win_spins)/len(win_spins)))
+        else:
+            resp['win_spin'] = '0'
+        
+        single_wins = [cl['spin_count_of_win'] for cl in cllc if cl['spin_count_of_win'] != '--']
+        if single_wins:
+            resp['single_win'] = int(round(reduce(lambda x,y:x+y, single_wins)/len(single_wins)))
+        else:
+            resp['single_win'] = '0'
+
+        renchans = [cl['renchan'] for cl in cllc if cl['renchan'] != '--']
+        if renchans:
+            resp['renchan'] = round(reduce(lambda x,y:x+y, renchans)/len(renchans))
+        else:
+            resp['renchan'] = '0'
+        totalwins = [cl['win_number'] for cl in cllc if cl['win_number'] != '--']
+        if totalwins:
+            resp['total_win'] = int(round(reduce(lambda x,y:x+y, totalwins)/len(totalwins)))
+        else:
+            resp['total_win'] = '0'
+        res.append(resp)
+    return json.dumps(res, default=json_util.default)
 
 @app.route('/getHallcode/column=<column>')
 @crossdomain(origin='*')

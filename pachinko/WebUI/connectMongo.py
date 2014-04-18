@@ -30,6 +30,7 @@ class DBConnection:
 			print e;
 			pass
 
+
 	def getMachineDetails(self,column,value,column2,value2,distinctcol):
 		try:
 			if self.checkEmptyValue(column2) or self.checkEmptyValue(value2): 
@@ -48,3 +49,24 @@ class DBConnection:
 			return True
 		else:
 			return False
+
+
+	def get_collections(self, startDate='', endDate='', hallcode='',machinetype='',machinenumber=''):
+		"""
+		Query collections from 'data' table.
+		if all empty return the whole package.
+		"""
+
+		collection = self.db['data']
+		query = {}
+		if not self.checkEmptyValue(startDate) and not self.checkEmptyValue(endDate):
+			query['date'] = {"$gte": startDate, "$lte": endDate}
+		if not self.checkEmptyValue(hallcode):
+			query['hallcode'] = hallcode
+		if not self.checkEmptyValue(machinetype):
+			query['machine_type'] = machinetype
+		if not self.checkEmptyValue(machinenumber):
+			query['machine'] = machinenumber
+		#print query
+
+		return list(collection.find(query))

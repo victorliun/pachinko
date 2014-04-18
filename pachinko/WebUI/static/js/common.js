@@ -38,9 +38,45 @@ function updateNext(el, nextName) {
     });
      //clear the option list
      $('#'+nextName).text('');
+     $('#'+nextName).prev().text('None');
     //attach the option list
     $(txtStrng).appendTo('#'+nextName);
 
 }
 
+function show_machine_type()
+{
+    var hallcode_value = $("#hallcode li.selected").text();
+    var machine_type = $("#machinetype li.selected").text();
+    if( hallcode=="None" || machine_type == "None")
+        return;
+    var startDate = $("input#from-datepicker").val();
+    var endDate =  $("input#to-datepicker").val();
+    var url = "/get_machine_type_details?hallcode="+hallcode_value+"&machinetype="+machine_type +
+        "&startDate="+startDate+"&endDate="+endDate;
+    $.ajax({
+        async: false,
+        url: url,
+        dataType: 'json',
+        success: function(data, textStatus, jqXHR)
+        {
+            $("div#tables").hide();
+            var table_string = "";
+            $.each(data, function(index, val){
+                table_string += "<tr><td>"+val['machine']+ "</td><td>" 
+                    + val['range'] +"</td><td>" + val['win_spin'] 
+                    + "</td><td>" +val['single_win'] + "</td><td>"
+                    + val['renchan'] + "</td><td>" + val['total_win'] +"</td></tr>";
+            });
+            $("div#machine_type_table table tr").slice(1).remove();
+            $("div#machine_type_table table").append(table_string);
+            $("div#machine_type_table").show();
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+            alert(textStatus)
+            alert(jqXHR)
+        }
+    });
+}
 

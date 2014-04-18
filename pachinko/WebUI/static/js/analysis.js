@@ -63,6 +63,7 @@ $(document).ready(function(){
         $("#machinetype li.selected").removeClass("selected");
         $(this).addClass("selected");
         updateNext(this, 'machinenumber')
+        show_machine_type();
         $("a#by_machine_type").focus();
     });
     $("a#by_machine_type").keydown(function(event){
@@ -80,6 +81,7 @@ $(document).ready(function(){
             next.addClass("selected");
             $("a#by_machine_type").html(next.html());
             updateNext(next,"machinenumber");
+            show_machine_type();
         }
         else if (event.keyCode == 37){// left arrow key down
             var selected = $("#machinetype li.selected");
@@ -95,6 +97,7 @@ $(document).ready(function(){
             prev.addClass("selected");
             $("a#by_machine_type").html(prev.html());
             updateNext(prev,"machinenumber");
+            show_machine_type();
         }      
     });
 
@@ -109,7 +112,9 @@ $(document).ready(function(){
         $("#machinenumber").hide();
         $("#machinenumber li.selected").removeClass("selected");
         $(this).addClass("selected");
-        updateTable(this, 'tabledata')
+        updateTable(this, 'tabledata');
+        $("div#machine_type_table").hide();
+        $("div#tables").show()
         $("a#by_machine").focus();
     });
     $("a#by_machine").keydown(function(event){
@@ -127,6 +132,8 @@ $(document).ready(function(){
             next.addClass("selected");
             $("a#by_machine").html(next.html());
             updateTable(next,"tabledata");
+            $("div#machine_type_table").hide();
+            $("div#tables").show()
         }
         else if (event.keyCode == 37){// left arrow key down
             var selected = $("#machinenumber li.selected");
@@ -142,6 +149,8 @@ $(document).ready(function(){
             prev.addClass("selected");
             $("a#by_machine").html(prev.html());
             updateTable(prev,"tabledata");
+            $("div#machine_type_table").hide();
+            $("div#tables").show()
         }      
     });
 });
