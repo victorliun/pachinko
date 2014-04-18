@@ -24,6 +24,8 @@ $(document).ready(function () {
                 onSelect: function (date) {
                     if($("#by_hall").text() != "None"  && $("#by_machine_type").text() != "None"  && $("#by_machine").text() == "None" )
                         show_machine_type();
+                    else if ($("#by_hall").text() != "None"  && $("#by_machine_type").text() == "None")
+                        show_machine_types_from_hallcode();
 			        updateTable(this,"tabledata");
                 }
             }).val(getDateFormat(oneYr));
@@ -34,6 +36,10 @@ $(document).ready(function () {
                 dateFormat: "yy-mm-dd",
                 // setDate: new Date(),
                 onSelect: function (date) {
+                    if($("#by_hall").text() != "None"  && $("#by_machine_type").text() != "None"  && $("#by_machine").text() == "None" )
+                        show_machine_type();
+                    else if ($("#by_hall").text() != "None"  && $("#by_machine_type").text() == "None")
+                        show_machine_types_from_hallcode();
 			        updateTable(this, "tabledata");
                 }
             }).val(getDateFormat(now));
