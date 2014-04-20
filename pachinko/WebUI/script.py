@@ -60,29 +60,29 @@ def crossdomain(origin=None, methods=None, headers=None,
 
 @app.route('/')
 def index():
-	if 'username' in session:
-		#return 'Logged in as %s' % escape(session['username'])
-		return render_template('showLinks.html')
-	return 'You are not authorised to log in. Please enter correct username and password.'
+    if 'username' in session:
+    #return 'Logged in as %s' % escape(session['username'])
+        return render_template('showLinks.html')
+    return 'You are not authorised to log in. Please enter correct username and password.'
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	if(request.method == 'POST'):
-		print request.form['password']
-		if(request.form['username'] == 'app' and request.form['password'] == 'password'):
-			session['username'] = request.form['username']
-		return redirect(url_for('home'))
-	return render_template('login_page.html')
+    if(request.method == 'POST'):
+        print request.form['password']
+    if(request.form['username'] == 'app' and request.form['password'] == 'password'):
+        session['username'] = request.form['username']
+        return redirect(url_for('home'))
+    return render_template('login_page.html')
 
 @app.route('/logout')
 def logout():
-	# remove the username from the session if it's there
-	session.pop('username', None)
-	return redirect(url_for('login'))
+    # remove the username from the session if it's there
+    session.pop('username', None)
+    return redirect(url_for('login'))
 
 @app.route('/home')
 def home():
-	return redirect(url_for('analysis'))#render_template('home.html')
+    return redirect(url_for('analysis'))#render_template('home.html')
 
 @app.route('/analysis')
 def analysis():
@@ -96,61 +96,64 @@ def set_crawler():
 def update():
     return render_template('update_hall_and_machine.html')
 
+@app.route('/view-graphs')
+def view_grahps():
+    return render_template('view_machine_graphs.html')
 
 
 @app.route('/viewData')
 def viewData():
-	return render_template('single_viewdata.html')
+    return render_template('single_viewdata.html')
 
 from collections import defaultdict
 
 
 def getSpinCount(data):
-    	c_cnt = defaultdict(int)
-	c_max = defaultdict(int)
-	c_max_time = {}
-	c_max_time_win = {}
-	renchan_wins = defaultdict(list)
-	renchan_count = defaultdict(int)
-	totalwins = defaultdict(int)
-	ret = []
-	for post in data:
-		dt = post["date"]
-		if dt not in c_max_time:
-			c_max_time[dt] = ""
-		c_cnt[dt] += post["spin_count_of_win"]
-		if len(post["time_of_win"]) > 3:
-			if post["win_number"] != "--" and c_max[dt] < post["win_number"]:
-				c_max[dt] = post["win_number"]
-			if post["time_of_win"] != "--" and c_max_time[dt] < post["time_of_win"]:
-				c_max_time[dt] = post["time_of_win"]
-		if post["time_of_win"] == "--" and post["win_number"] == "--":
-			c_max_time_win[dt] = post["spin_count_of_win"]
-		if post["renchan"] == 0 and post["win_number"] != "--":
-			renchan_wins[dt].append({"time":post["time_of_win"], "spin": post["spin_count_of_win"]})
-		if post["renchan"] > 0:
-			renchan_count[dt] += post["renchan"]
-		if post["win_number"] > totalwins[dt] and totalwins[dt] != -1:
-			totalwins[dt] = post["win_number"]
-		if post["win_number"] == "--":
-			totalwins[dt] = 0
-			
-	for c in sorted(c_cnt.keys()):
-		r = {}
-		r["date"] = c
-		r["time_of_win"] = ""
-		r["value"] = c_cnt[c]
-		r["max_win_number"] = c_max[c]
-		r["closingspincount"] = c_max_time_win[c]
-		r["singlewinsspincount"] = renchan_wins[c]
-		r["renchan"] = renchan_count[c]
-		if totalwins[dt] == -1:
-			r["totalwins"] = 0
-		else:
-			r["totalwins"] = totalwins[c]
+    c_cnt = defaultdict(int)
+    c_max = defaultdict(int)
+    c_max_time = {}
+    c_max_time_win = {}
+    renchan_wins = defaultdict(list)
+    renchan_count = defaultdict(int)
+    totalwins = defaultdict(int)
+    ret = []
+    for post in data:
+        dt = post["date"]
+        if dt not in c_max_time:
+            c_max_time[dt] = ""
+        c_cnt[dt] += post["spin_count_of_win"]
+        if len(post["time_of_win"]) > 3:
+            if post["win_number"] != "--" and c_max[dt] < post["win_number"]:
+                c_max[dt] = post["win_number"]
+            if post["time_of_win"] != "--" and c_max_time[dt] < post["time_of_win"]:
+                c_max_time[dt] = post["time_of_win"]
+        if post["time_of_win"] == "--" and post["win_number"] == "--":
+            c_max_time_win[dt] = post["spin_count_of_win"]
+        if post["renchan"] == 0 and post["win_number"] != "--":
+            renchan_wins[dt].append({"time":post["time_of_win"], "spin": post["spin_count_of_win"]})
+        if post["renchan"] > 0:
+            renchan_count[dt] += post["renchan"]
+        if post["win_number"] > totalwins[dt] and totalwins[dt] != -1:
+            totalwins[dt] = post["win_number"]
+        if post["win_number"] == "--":
+            totalwins[dt] = 0
+            
+    for c in sorted(c_cnt.keys()):
+        r = {}
+        r["date"] = c
+        r["time_of_win"] = ""
+        r["value"] = c_cnt[c]
+        r["max_win_number"] = c_max[c]
+        r["closingspincount"] = c_max_time_win[c]
+        r["singlewinsspincount"] = renchan_wins[c]
+        r["renchan"] = renchan_count[c]
+        if totalwins[dt] == -1:
+            r["totalwins"] = 0
+        else:
+            r["totalwins"] = totalwins[c]
 
-		ret.append(r)
-	return ret
+        ret.append(r)
+    return ret
 
 @app.route('/Data')
 @crossdomain(origin='*')
@@ -162,53 +165,57 @@ def getData():
     machinenumber = request.args.get('machinenumber', '')
     chartType = request.args.get('chart', '')
     posts= dbConn.getData(startDate,endDate,hallcode,machinetype,machinenumber)
-    list = []
+    lst = []
     spincount = []
     if len(chartType) > 0:
-	    spincount = getSpinCount(posts)
+        spincount = getSpinCount(posts)
     if chartType == 'spincount':
-    	list = spincount
+        lst = spincount
     elif chartType == 'winspincount':
-	for s in spincount:
-		rec = {}
-		rec["date"] = s["date"]
-		rec["value"] = float(s["value"])/s["max_win_number"]
-		rec["time_of_win"] = ""
-		list.append(rec)
+        for s in spincount:
+            rec = {}
+            rec["date"] = s["date"]
+            if s.get("max_win_number"):
+                rec["value"] = float(s["value"])/s["max_win_number"]
+            else:
+                rec["value"] = s['value']
+            rec["time_of_win"] = ""
+            lst.append(rec)
     elif chartType == "closingspincount":
-	for s in spincount:
-		rec = {}
-		rec["date"] = s["date"]
-		rec["time_of_win"] = ""
-		rec["value"] = s["closingspincount"]
-		list.append(rec)
+        for s in spincount:
+            rec = {}
+            rec["date"] = s["date"]
+            rec["time_of_win"] = ""
+            rec["value"] = s["closingspincount"]
+            lst.append(rec)
     elif chartType == 'singlewinsspincount':
-    	for s in spincount:
-		for l in s["singlewinsspincount"]:
-			rec = {}
-			rec["date"] = s["date"]
-			rec["time_of_win"] = l["time"]
-			rec["value"] = l["spin"]
-			list.append(rec)
+        for s in spincount:
+            for l in s["singlewinsspincount"]:
+                rec = {}
+                rec["date"] = s["date"]
+                rec["time_of_win"] = l["time"]
+                rec["value"] = l["spin"]
+                lst.append(rec)
     elif chartType == "renchan":
-    	for s in spincount:
-		rec = {}
-		rec["date"] = s["date"]
-		rec["time_of_win"] = ""
-		rec["value"] = s["renchan"]
-		list.append(rec)
+        for s in spincount:
+            rec = {}
+            rec["date"] = s["date"]
+            rec["time_of_win"] = ""
+            rec["value"] = s["renchan"]
+            lst.append(rec)
     elif chartType == "totalwins":
-    	for s in spincount:
-		rec = {}
-		rec["date"] = s["date"]
-		rec["time_of_win"] = ""
-		rec["value"] = s["totalwins"]
-		list.append(rec)
+        for s in spincount:
+            rec = {}
+            rec["date"] = s["date"]
+            rec["time_of_win"] = ""
+            rec["value"] = s["totalwins"]
+            lst.append(rec)
     else:
-    	for post in posts:
-		list.append(post)
-    #return json.dumps(list, cls=Encoder)
-    return json.dumps(list, default=json_util.default)
+        for post in posts:
+            lst.append(post)
+    #return json.dumps(lst, cls=Encoder)
+    return json.dumps(lst, default=json_util.default)
+
 
 @app.route('/get_machine_type_details')
 @crossdomain(origin='*')
@@ -299,10 +306,10 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
 @crossdomain(origin='*')
 def getHallCode(column):
     posts= dbConn.getHallCode(column)
-    list = []
+    lst = []
     for post in posts:
-        list.append(post)
-    return json.dumps(list, cls=Encoder)
+        lst.append(post)
+    return json.dumps(lst, cls=Encoder)
 
 @app.route('/getMachineDetails')
 @crossdomain(origin='*')
@@ -313,10 +320,10 @@ def getMachineDetails():
     value2 = request.args.get('value2', '')
     distinctcol = request.args.get('distinctcol', '')
     posts= dbConn.getMachineDetails(column,value,column2,value2,distinctcol)
-    list = []
+    lst = []
     for post in posts:
-        list.append(post)
-    return json.dumps(list, default=json_util.default)
+        lst.append(post)
+    return json.dumps(lst, default=json_util.default)
 
 @app.route('/setCrawlerData', methods=['POST','GET'])
 @crossdomain(origin='*')
@@ -330,9 +337,9 @@ def setCrawlerData():
         startLastCrawlTime= request.form['startLastCrawlTime']
         startingDate= request.form['startingDate']
         finishingDate= request.form['finishingDate']
-        dbConn1.setCrawlerData(username,password,targetHallocde,targetmachinetype,startFirstCrawlTime,startLastCrawlTime,startingDate,finishingDate)	
-	#return json.dumps({ "result" : "Data Submitted suuceessfully"})
-	msg = "Data saved successfully."
+        dbConn1.setCrawlerData(username,password,targetHallocde,targetmachinetype,startFirstCrawlTime,startLastCrawlTime,startingDate,finishingDate)    
+        #return json.dumps({ "result" : "Data Submitted suuceessfully"})
+        msg = "Data saved successfully."
         return render_template('set_crawler_parameters.html', msg=msg)
     #username = request.args.get('username', '')
     return render_template('set_crawler_parameters.html', msg="")
@@ -341,21 +348,21 @@ def setCrawlerData():
 @crossdomain(origin='*')
 def getCrawlerData():
     posts= dbConn1.getLatestCrawlerDetails()
-    list = []
+    lst = []
     for post in posts:
-        list.append(post)
-    return json.dumps(list, default=json_util.default)
+        lst.append(post)
+    return json.dumps(lst, default=json_util.default)
 
 @app.route('/getPreviousData', methods=['POST','GET'])
 @crossdomain(origin='*')
 def getPreviuosData():
     posts= dbConn1.getPreviousData()
-    list = []
+    lst = []
     for post in posts:
-        list.append(post)
-    return json.dumps(list, default=json_util.default)
+        lst.append(post)
+    return json.dumps(lst, default=json_util.default)
 
 
 if __name__ == '__main__':
-	app.debug = True
-	app.run(host='0.0.0.0')
+    app.debug = True
+    app.run(host='0.0.0.0')

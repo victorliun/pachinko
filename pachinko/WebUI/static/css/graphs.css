@@ -47,43 +47,25 @@ div#date {
     color: black;
 }
 
-div#tables{
-    margin: 10px 10px;
+table#graphs {
     color: black;
-    width: 98%;
-}
-
-div#machine_type_table, div#hall_table{
-    display: none;
-    margin: 10px auto;
-    color: black;
-    width: 98%;
-}
-div#machine_type_table  table, div#hall_table table{
-    width: 90%;
-    margin: auto;
-}
-
-table td {
-    height: 16px;
-}
-
-table#averages{
-    margin: 10px auto;  
-    width: 100%;
-}
-
-table#tabledata{
-    margin:20px auto;
+    margin: 20px auto;
     width: 90%;
 }
-
 ul#hallcode, ul#machinetype, ul#machinenumber{
     margin-left: -8px;
     margin-top: 0px;
     display: none;
+    z-index: 100;
 }
 
 ul#hallcode li, ul#machinetype li, ul#machinenumber li{
     cursor: pointer;
+}
+
+div#spincountday, div#winspincountday, div#closingspincountday,
+div#singlewinsspincountday,div#renchanday, div#totalwinsday {
+    width: 90%; 
+    height: 342px;
+    margin: 10px auto;
 }

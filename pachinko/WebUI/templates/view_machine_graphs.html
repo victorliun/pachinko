@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}{{super()}} - Get Data{% endblock %}
+{%block extracss%}
+<link rel="stylesheet" href="../static/css/graphs.css" type="text/css">
+{%endblock%}
+{%block page_header%}View Machine Graphs{%endblock%}
+
+{%block content%}
+<div class="category">
+    <ul>
+        <li style="visibility: hidden;"></li>
+        <li><a id="by_hall" href="#">By Hall</a>
+            <ul id="hallcode"></ul>
+        </li>
+        <li><a id="by_machine_type" href="#">By Machine Type</a>
+            <ul id="machinetype"></ul>
+        </li>
+        <li><a id="by_machine" href="#">By Individual Machine</a>
+            <ul id="machinenumber"></ul>
+        </li>
+    </ul>
+</div>
+<div style="clear:both;"></div>
+<div id="date">
+    <span> Input Date Range for a Anlysis.</span> From: 
+    <input type="text" id="from-datepicker">
+    To: <input type="text" id="to-datepicker">
+</div>
+
+<table id="graphs">
+    <tr>
+        <td>
+            <center>
+                <b>Spin Count</b>
+                <br />
+            </center>
+            <div id="spincountday"></div>
+            <div style="margin-left:35px;">
+            <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+            <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>
+                <b>Win Spin Count</b>
+                <br />
+            </center>
+            <div id="winspincountday" ></div>
+            <div style="margin-left:35px;">
+                <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+                <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>
+                <b>Closing Spin Count</b>
+                <br />
+            </center>
+            <div id="closingspincountday"></div>
+            <div style="margin-left:35px;">
+            <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+            <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>
+                <b>Spin Count for Single Wins</b>
+                <br />
+            </center>
+            <div id="singlewinsspincountday"></div>
+            <div style="margin-left:35px;">
+            <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+            <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>
+                <b>Renchan Wins</b>
+                <br />
+            </center>
+            <div id="renchanday"></div>
+            <div style="margin-left:35px;">
+            <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+            <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <center>
+                <b>Total Wins</b><br/>
+            </center>
+            <div id="totalwinsday"></div>
+            <div style="margin-left:35px;">
+            <input type="radio" name="group" id="rb1" onclick="setPanSelect()">Select
+            <input type="radio" checked="true" name="group" id="rb2" onclick="setPanSelect()">Pan
+            </div>
+        </td>
+    </tr>
+</table>
+{%endblock%}
+
+{%block extrajs%}
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/amcharts/2.11.3/amcharts.js"></script>
+<script type="text/javascript" src="../static/js/charts.js"></script>
+<script type="text/javascript" src="../static/js/graphs.js"></script>
+{%endblock%}
