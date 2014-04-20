@@ -69,8 +69,8 @@ def index():
 def login():
     if(request.method == 'POST'):
         print request.form['password']
-    if(request.form['username'] == 'app' and request.form['password'] == 'password'):
-        session['username'] = request.form['username']
+        if(request.form['username'] == 'app' and request.form['password'] == 'password'):
+            session['username'] = request.form['username']
         return redirect(url_for('home'))
     return render_template('login_page.html')
 
