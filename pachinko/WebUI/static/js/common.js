@@ -2,7 +2,7 @@ function updateNext(el, nextName) {
     if(el == "hallcode")
         var full_url ="/getHallcode/column=hallcode";
     else
-        var url_arg = jQuery(el).attr("value");
+        var url_arg = jQuery(el).attr("data");
     if(nextName == "machinetype")
         var full_url ="/getMachineDetails?column=hallcode&value="+url_arg+"&distinctcol=machine_type";
     else if (nextName == "machinenumber")
@@ -30,9 +30,9 @@ function updateNext(el, nextName) {
                 }
             });
     //create the option list
-    txtStrng += "<li value=blank>None</li>";
+    txtStrng += "<li data='blank'>None</li>";
     $.each( options, function(i,val) {
-        txtStrng += "<li value=\"" + val + "\">";
+        txtStrng += "<li data='" + val + "'>";
         txtStrng += val ;
         txtStrng += "</li>";
     });

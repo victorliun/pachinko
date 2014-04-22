@@ -1,6 +1,6 @@
 
 from flask import Flask
-from flask import Flask, session, redirect, url_for, escape, request
+from flask import Flask, g, session, redirect, url_for, escape, request
 from flask import render_template
 import os
 from functools import update_wrapper
@@ -11,12 +11,32 @@ from connectMongoCrawler import DBCrawlerConnection
 import json
 from encoder import Encoder
 from bson import json_util
+from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 dbConn = DBConnection()
 dbConn1 = DBCrawlerConnection()
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@app.before_request
+def before_request():
+    """
+    pull user's profile from the database before every request are treated
+    """
+    g.user = None
+    if 'username' in session:
+        g.user = session['username']
+
+  
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
                 automatic_options=True):
@@ -63,7 +83,7 @@ def index():
     if 'username' in session:
     #return 'Logged in as %s' % escape(session['username'])
         return render_template('showLinks.html')
-    return 'You are not authorised to log in. Please enter correct username and password.'
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -81,27 +101,33 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/home')
+@login_required
 def home():
     return redirect(url_for('analysis'))#render_template('home.html')
 
 @app.route('/analysis')
+@login_required
 def analysis():
     return render_template('get_data.html')
 
 @app.route('/set-crawler')
+@login_required
 def set_crawler():
     return render_template('set_crawler.html')
 
 @app.route('/update')
+@login_required
 def update():
     return render_template('update_hall_and_machine.html')
 
 @app.route('/view-graphs')
+@login_required
 def view_grahps():
     return render_template('view_machine_graphs.html')
 
 
 @app.route('/viewData')
+@login_required
 def viewData():
     return render_template('single_viewdata.html')
 
