@@ -365,7 +365,7 @@ def setCrawlerData():
         finishingDate= request.form['finishingDate']
         dbConn1.setCrawlerData(username,password,targetHallocde,targetmachinetype,startFirstCrawlTime,startLastCrawlTime,startingDate,finishingDate)    
         #return json.dumps({ "result" : "Data Submitted suuceessfully"})
-        msg = "Data saved successfully."
+        msg = "Data a saved successfully."
         return render_template('set_crawler_parameters.html', msg=msg)
     #username = request.args.get('username', '')
     return render_template('set_crawler_parameters.html', msg="")
