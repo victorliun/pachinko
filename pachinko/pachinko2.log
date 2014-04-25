@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "scrape_data.py", line 10, in <module>
-    from machine import *
-ImportError: No module named machine
