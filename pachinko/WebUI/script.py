@@ -1,17 +1,19 @@
 
-from flask import Flask
-from flask import Flask, g, session, redirect, url_for, escape, request
-from flask import render_template
+from __future__ import  absolute_import
+from flask import Flask, g, session, redirect, \
+        url_for, escape, request, render_template,\
+        make_response, request, current_app
 import os
 from functools import update_wrapper
 from datetime import timedelta
-from flask import make_response, request, current_app
 from connectMongo import DBConnection
 from connectMongoCrawler import DBCrawlerConnection
 import json
 from encoder import Encoder
 from bson import json_util
 from functools import wraps
+from ghost import Ghost
+from utils import sign_in
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -347,6 +349,43 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
             resp['total_win'] = 0
         res.append(resp)
     return res
+
+@app.route('/get_codes')
+def get_codes():
+    """
+    this view will return hallcodes if no request args,
+    machine types if only hallcode specified,
+    machines if both hallcode and machinetype specified.
+    """
+    mdb = DBConnection()
+    hallcode = request.args.get("hallcode")
+    machinetype = request.args.get("machinetype")
+    if not hallcode and not machinetype:
+        return json.dumps(mdb.get_hallcodes(), default=json_util.default)
+    elif hallcode and not machinetype:
+        return json.dumps(mdb.get_machine_types(hallcode), default=json_util.default)
+    elif hallcode and machinetype:
+        return json.dumps(mdb.get_machines(hallcode, machinetype), default=json_util.default)
+
+@app.route("/check_yahoo_account")
+def check_yahoo_accout():
+    """
+    check yahoo accout is availale or not.
+    try login
+    """
+    password = request.args.get('password')
+    username = request.args.get('username')
+    print password, username
+    gh = Ghost(user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36", wait_timeout=100);
+    loged = sign_in(gh, username, password)
+    gh.exit()
+    resp = {}
+    if loged[0]:
+        resp['status'] = True
+    else:
+        resp['status'] = False
+    return json.dumps(resp)
+
 
 @app.route('/getHallcode/column=<column>')
 @crossdomain(origin='*')

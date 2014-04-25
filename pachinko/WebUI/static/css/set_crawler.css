@@ -46,3 +46,8 @@ input[type="button"] {
     color: white;
     text-transform: uppercase;
 }
+
+.helper {
+    display: none;
+    color: red;
+}

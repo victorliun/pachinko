@@ -84,19 +84,22 @@ class DBConnection:
         """
         Return all hallcodes in the collection
         """
-        return self.machine_details.find({'ancestors:':[]})
+        hallcodes = self.machine_details.find({'ancestors':[]})
+        return [hallcode['hallcode'] for hallcode in hallcodes]
 
     def get_machine_types(self, hallcode):
         """
         Return all machine types under the hall code.
         """
-        return self.machine_details.find({'ancestors:':[hallcode]})
+        machine_types = self.machine_details.find({'ancestors':[hallcode]})
+        return [mt['machine_type'] for mt in machine_types]
 
     def get_machines(self, hallcode, machine_type):
         """
         Return all machine types under the hall code.
         """
-        return self.machine_details.find({'ancestors':[machine_type, hallcode]})
+        machines = self.machine_details.find({'ancestors':[machine_type, hallcode]})
+        return [machine['machine'] for machine in machines]
 
     def insert_hallcode(self, hallcode):
         """

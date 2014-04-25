@@ -9,6 +9,8 @@ from functools import wraps
 from datetime import datetime
 from pymongo import Connection
 from WebUI.connectMongo import DBConnection 
+from WebUI.utils import sign_in
+
 logger = logging.getLogger("ghost")
 logging.basicConfig(level=logging.DEBUG)
 import time
@@ -132,33 +134,6 @@ def getData(gh, hallcode, machine_range):
     if not mdb.machine_details.find({'machine':machine, 'ancestors':[hallcode, machine_type]}):
         mdb.insert_machine(hallcode, machine_type, machine)
 
-def sign_in(gh, account_id, account_ps):
-    """
-    Check yahoo account name and password if it is correct
-    """
-    page, resources = gh.open("http://fe.site777.tv/data/yahoo/login.php")
-    gh.wait_for_selector('input[name=login]')
-    print page.url 
-    result, resources = gh.set_field_value("input[name=login]", account_id) #"gopachipro")
-    result, resources = gh.set_field_value("input[name=passwd]", account_ps) #"pachi.pro.2014")
-    result, resources = gh.click(".btnLogin", expect_loading=True)
-    print 2
-    time.sleep(2)
-
-    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
-    time.sleep(3)
-    print 3
-    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
-    time.sleep(4)
-    print 4
-    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
-    print result.url
-    if 'yahoo' in str(result.url):
-	print "login failed."
-        return False,
-    else:
-	print "login!."
-        return True, result, resources
 
 def start_crawling(hallcode=hall_code, machine_types=machine_type,
          account_id=username, account_ps=password):
