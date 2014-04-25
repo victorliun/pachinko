@@ -83,6 +83,7 @@ ul#hallcode, ul#machinetype, ul#machinenumber{
     margin-top: 0px;
     display: none;
     height: 300px;
+    overflow: auto;
 }
 
 ul#hallcode li, ul#machinetype li, ul#machinenumber li{
