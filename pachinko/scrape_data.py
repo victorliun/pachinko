@@ -205,8 +205,8 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
         """
         result, resources = gh.evaluate(js, expect_loading=True)
 
-        gh.exit()
-        print "ghost exits."
+    gh.exit()
+    print "ghost exits."
 
 def goToMachines(gh, hallcode):
     res = 0
