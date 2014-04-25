@@ -26,14 +26,20 @@ div.login {
 
 form {
     margin: 60px auto;
-    width:300px;
+    width:305px;
 }
 
 form label{
     color: black;
-    line-height: 40px;
+    width: 90px;
+    display: block;
+    float: left;
+    line-height: 20px;
 }
 
+div#password {
+    margin-top: 5px;
+}
 div#submit {
     text-align: center;
     margin-top: 10px;

@@ -1,0 +1,48 @@
+form {
+    margin: 60px auto;
+    width:60%;
+}
+
+form label{
+    color: black;
+    width: 210px;
+    display: block;
+    float: left;
+    line-height: 20px;
+}
+
+form div{
+    margin: 10px;
+}
+
+
+div#password {
+    margin-top: 5px;
+}
+div#submit {
+    text-align: center;
+    margin-top: 10px;
+}
+
+input[type=submit] {
+    padding:5px 15px; 
+    background:#003f6f; 
+    border:0 none;
+    cursor:pointer;
+    width: 300px;
+    color: white;
+}
+
+div#log {
+    margin: 60px auto;
+    width:60%;
+    color: black;
+}
+
+input[type="button"] {
+    width: 300px;
+    border: 0px;
+    background-color: #003f6f;
+    color: white;
+    text-transform: uppercase;
+}

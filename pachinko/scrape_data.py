@@ -9,9 +9,7 @@ from functools import wraps
 from datetime import datetime
 from machine import *
 from pymongo import Connection
-from WebUI.connectMongo import DBConnection
-newmlin
-
+ 
 logger = logging.getLogger("ghost")
 logging.basicConfig(level=logging.DEBUG)
 import time
@@ -37,22 +35,22 @@ password = meta_data["password"]
 
 print hall_code, machine_type, username, password
 
-def getData(g, hallcode, machine_range):
+def getData(gh, hallcode, machine_range):
     con = Connection()
-    content = unicode(g.content)
-    hxs = HtmlXPathSelector(text=unicode(g.content))
+    content = unicode(gh.content)
+    hxs = HtmlXPathSelector(text=unicode(gh.content))
     rows = hxs.select('//table//tr').extract()
     machine = ""
     try:
-      machine2 = hxs.select('//div[@id="dedama_past_table"]//h4/text()').extract()[0]
+        machine2 = hxs.select('//div[@id="dedama_past_table"]//h4/text()').extract()[0]
     except:
-     return
+        return
     for m in machine2:
         try:
-        int(m)
+            int(m)
             machine += m
-    except:
-        pass
+        except:
+            pass
     dump = {}
     dump["timestamp"] = datetime.now()
     dump["hallcode"] = hallcode
@@ -72,17 +70,17 @@ def getData(g, hallcode, machine_range):
 
     for r in rows:
         if i == 0:
-        i = 1
+            i = 1
         continue
     res = {}
-        res["timestamp"] = datetime.now()
-        res["hallcode"] = hallcode
+    res["timestamp"] = datetime.now()
+    res["hallcode"] = hallcode
     res["machine_type"] = machine_type
-        res["machine"] = machine
-        res["date"] = today_date
-        res["renchan"] = 0
+    res["machine"] = machine
+    res["date"] = today_date
+    res["renchan"] = 0
     res["machine_range"] = machine_range
-        hxs2 = HtmlXPathSelector(text=r)
+    hxs2 = HtmlXPathSelector(text=r)
     cells = hxs2.select('//td/text()').extract() + hxs2.select('//th/text()').extract()
     jr = []
     res["win_number"] = cells[0].strip()
@@ -115,15 +113,15 @@ def getData(g, hallcode, machine_range):
 
     for c in cells:
         jr.append(c.strip())
-
+    
     jackpots.append(jr)
-        key = {}
+    key = {}
     key["hallcode"] = hallcode
     key["machine"] = machine
     key["date"] = today_date
     key["time_of_win"] = cells[1].strip()
 #   print res
-        con["pachinko_data2"]["data"].update(key, res, upsert=True)
+    con["pachinko_data2"]["data"].update(key, res, upsert=True)
     dump["series"] = jackpots
     con["pachinko_dump2"]["data"].insert(dump)
     #save hallcode, machine_type, machine if one is new
@@ -135,43 +133,56 @@ def getData(g, hallcode, machine_range):
     if not mdb['machine_details'].find({'machine':machine, 'ancestors':[hallcode, machine_type]}):
         mdb.insert_machine(hallcode, machine_type, machine)
 
-def signin():
-    machine_type_condition = ["buttons[i].getAttributeNode('onclick').value.indexOf('" + mt.strip() + "') != -1"  for mt in machine_type]
+def sign_in(gh, account_id, account_ps):
+    """
+    Check yahoo account name and password if it is correct
+    """
+    page, resources = gh.open("http://fe.site777.tv/data/yahoo/login.php")
+    gh.wait_for_selector('input[name=login]')
+    
+    result, resources = gh.set_field_value("input[name=login]", account_id) #"gopachipro")
+    result, resources = gh.set_field_value("input[name=passwd]", account_ps) #"pachi.pro.2014")
+    result, resources = gh.click(".btnLogin", expect_loading=True)
+    print 2
+    time.sleep(2)
+
+    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
+    time.sleep(3)
+    print 3
+    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
+    time.sleep(4)
+    print 4
+    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
+    print result.url
+    if 'yahoo' in str(result.url):
+        return False
+    else:
+        return True
+
+def start_crawling(hallcode=hall_code, machine_types=machine_type,
+         account_id=username, account_ps=password):
+    """start_crawling"""
+
+    gh = Ghost(user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36", wait_timeout=100);
+    loged = sign_in(gh, account_id, account_ps)
+    if not loged:
+        print "login failed."
+        return
+
+    time.sleep(2)
+    u = "/".join(str(result.url).split("/")[:-1]) + "/" + "HallSelectLink.do?hallcode=" + hallcode
+    print u
+
+    result, resources = gh.open(u)
+    button_index = 0
+
+    machine_type_condition = ["buttons[i].getAttributeNode('onclick').value.indexOf('" + mt.strip() + "') != -1"  for mt in machine_types]
     machine_condition = ""
     if len(machine_type_condition) > 0:
         machine_condition = " || ".join(machine_type_condition)
     machine_condition = " && ( " + machine_condition + " )"
-
+    
     print machine_condition
-   # return
-
-    ghost = Ghost(user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36", wait_timeout=100);
-    page, resources = ghost.open("http://fe.site777.tv/data/yahoo/login.php")
-    ghost.wait_for_selector('input[name=login]')
-
-    result, resources = ghost.set_field_value("input[name=login]", username) #"gopachipro")
-    result, resources = ghost.set_field_value("input[name=passwd]", password) #"pachi.pro.2014")
-    result, resources = ghost.click(".btnLogin", expect_loading=True)
-    print 2
-    time.sleep(2)
-
-
-    result, resources = ghost.evaluate("document.forms[0].submit();", expect_loading=True)
-    time.sleep(3)
-    print 3
-    result, resources = ghost.evaluate("document.forms[0].submit();", expect_loading=True)
-    time.sleep(4)
-    print 4
-    result, resources = ghost.evaluate("document.forms[0].submit();", expect_loading=True)
-    print result.url
-    if 'yahoo' in str(result.url):
-        return
-    time.sleep(2)
-    u = "/".join(str(result.url).split("/")[:-1]) + "/" + "HallSelectLink.do?hallcode=" + hall_code
-    print u
-    #ghost.open("http://cs2.site777.tv/data/wE6pfoe9du115e0oh044r4ngd8tmb71agji4786e10/kakin/HallSelectLink.do?hallcode=27038046", expect_loading=True)
-    result, resources = ghost.open(u)
-    button_index = 0
 
     while True:
         js = """
@@ -180,7 +191,7 @@ def signin():
         for(var i=""" + str(button_index) + """; i<buttons.length; i++){
         try{
             if(buttons[i].name == "select" """ + machine_condition + """){
-                qwe = i;
+                qwe = i;    
                 break;
             }
         } catch(err) {
@@ -189,7 +200,7 @@ def signin():
         qwe;
         """
 
-        result, resources = ghost.evaluate(js)
+        result, resources = gh.evaluate(js)
         button_index = result
         if button_index == -1:
             break
@@ -209,50 +220,53 @@ def signin():
         }
         } """
         print js
-        result, resources = ghost.evaluate(js, expect_loading=True)
+        result, resources = gh.evaluate(js, expect_loading=True)
 
-        goToMachines(ghost)
+        goToMachines(gh, hallcode)
         button_index += 1
         js = """
         history.go(-1);
         """
-        result, resources = ghost.evaluate(js, expect_loading=True)
+        result, resources = gh.evaluate(js, expect_loading=True)
 
-def goToMachines(ghost):
+        gh.exit()
+        print "ghost exits."
+
+def goToMachines(gh, hallcode):
     res = 0
     if True:
-    hxs = HtmlXPathSelector(text=ghost.content)
-    open("b", "wb").write(ghost.content.encode("utf-8", "ignore"))
-    complete_table = hxs.select('//div[@id="ata0"]').extract()
-    try:
-        complete_table = complete_table[0]
-    except:
-        return
-    hxs2 = HtmlXPathSelector(text=complete_table)
-    s = hxs2.select('//table//tr').extract()
+        hxs = HtmlXPathSelector(text=gh.content)
+        open("b", "wb").write(gh.content.encode("utf-8", "ignore"))
+        complete_table = hxs.select('//div[@id="ata0"]').extract()
+        try:
+            complete_table = complete_table[0]
+        except:
+            return
+        hxs2 = HtmlXPathSelector(text=complete_table)
+        s = hxs2.select('//table//tr').extract()
 
-    for tr in s:
-        hxs3 = HtmlXPathSelector(text=tr)
-        js_link = hxs3.select('//span[@class="his"]/a/@href').extract()
-        if len(js_link) > 0:
-            machine_range = hxs3.select('//td[5]/text()').extract()
-            js_link = js_link[0]
-            if "tableHistoryClick" in js_link:
-                if len(machine_range) > 0:
-                    machine_range = machine_range[0]
-                else:
-                    machine_range = ""
-                js_link = js_link.replace("javascript:", "")
-                print "executing:", js_link
-                result, resources = ghost.evaluate(js_link, expect_loading=True)
-                getData(ghost, hall_code, machine_range)
+        for tr in s:
+            hxs3 = HtmlXPathSelector(text=tr)
+            js_link = hxs3.select('//span[@class="his"]/a/@href').extract()
+            if len(js_link) > 0:
+                machine_range = hxs3.select('//td[5]/text()').extract()
+                js_link = js_link[0]
+                if "tableHistoryClick" in js_link:
+                    if len(machine_range) > 0:
+                        machine_range = machine_range[0]
+                    else:
+                        machine_range = ""
+                    js_link = js_link.replace("javascript:", "")
+                    print "executing:", js_link
+                    result, resources = gh.evaluate(js_link, expect_loading=True)
+                    getData(gh, hallcode, machine_range)
                     js = """
                     history.go(-1);
                     """
-                    result, resources = ghost.evaluate(js, expect_loading=True)
+                    result, resources = gh.evaluate(js, expect_loading=True)
                     time.sleep(2)
 
 
 if __name__=="__main__":
-    signin()
-
+    start_crawling()
+    

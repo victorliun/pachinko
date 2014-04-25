@@ -91,7 +91,12 @@ def login():
         print request.form['password']
         if(request.form['username'] == 'app' and request.form['password'] == 'password'):
             session['username'] = request.form['username']
-        return redirect(url_for('home'))
+            next = request.args.get('next')
+            if not next:
+                next = '/home'
+            else:
+                next = next.split('/',3)[-1]
+        return redirect(next)
     return render_template('login_page.html')
 
 @app.route('/logout')
@@ -110,10 +115,22 @@ def home():
 def analysis():
     return render_template('get_data.html')
 
-@app.route('/set-crawler')
+@app.route('/set-crawler', methods=['POST','GET'])
 @login_required
 def set_crawler():
-    return render_template('set_crawler.html')
+    if(request.method == 'POST'):
+        username = request.form['username']
+        password = request.form['password']
+        target_hallcode = request.form['target_hallcode']
+        target_machine_types = request.form['target_machine_types']
+        signal = request.form['signal']
+        if signal == "START":
+            dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
+            res = start_crawling(username, password, target_hallcode, target_machine_types)
+        elif signal == "STOP":
+            stop_crawling()
+        return json.dumps(res)
+    return render_template('set_crawler.html', msg='')
 
 @app.route('/update')
 @login_required
@@ -246,6 +263,9 @@ def getData():
 @app.route('/get_machine_type_details')
 @crossdomain(origin='*')
 def get_machine_type_details():
+    """
+    This function will return machine type data as a summary.
+    """
     startDate = request.args.get('startDate', '')
     endDate = request.args.get('endDate', '')
     hallcode = request.args.get('hallcode', '')
@@ -370,6 +390,7 @@ def setCrawlerData():
     #username = request.args.get('username', '')
     return render_template('set_crawler_parameters.html', msg="")
 
+
 @app.route('/getCrawlerData', methods=['POST','GET'])
 @crossdomain(origin='*')
 def getCrawlerData():
@@ -391,4 +412,4 @@ def getPreviuosData():
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5000)

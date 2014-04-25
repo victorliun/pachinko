@@ -1,3 +1,31 @@
 {% extends "base.html" %}
-{% block title %}{{super}} - Setting the Crawler{% endblock %}
+{%block extracss%}
+<link rel="stylesheet" href="../static/css/set_crawler.css" type="text/css">
+{%endblock%}
+{%block extrajs%}
+<script type="text/javascript" src="../static/js/set_crawler.js"></script>
+{%endblock%}
+{% block title %}{{super()}} - Setting the Crawler{% endblock %}
 {%block page_header%}Setting the Crawler{%endblock%}
+
+{%block content%}
+<form action="" method="post">
+    <div id="username_input">
+        <label>A. Yahoo! Login: </label>
+        <input type="text" name="username" placeholder="username">        
+        <input type="password" name="password" placeholder="password">
+    </div>
+    <div id="target_hall_input">
+        <label>B1. Target Hallcode:</label>
+        <input type="text" name="target_hallcode" id="target_hallcode">
+    </div>
+    <div id="machine_type_input">
+        <label>C1. Target MachineType:</label>
+        <input type="text" name="target_machine_types" id="target_machine_types">
+    </div>
+    <div id="submit"><input type="button" value="START"></div>
+</form>
+<div id='log'>
+    {{ msg }}
+</div>
+{%endblock%}
