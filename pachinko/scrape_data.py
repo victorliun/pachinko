@@ -7,9 +7,8 @@ import json
 from scrapy.selector import HtmlXPathSelector
 from functools import wraps
 from datetime import datetime
-from machine import *
 from pymongo import Connection
- 
+from WebUI.connectMongo import DBConnection 
 logger = logging.getLogger("ghost")
 logging.basicConfig(level=logging.DEBUG)
 import time
@@ -126,11 +125,11 @@ def getData(gh, hallcode, machine_range):
     con["pachinko_dump2"]["data"].insert(dump)
     #save hallcode, machine_type, machine if one is new
     mdb = DBConnection()
-    if not mdb['machine_details'].find({'hallcode':hallcode}):
+    if not mdb.machine_details.find({'hallcode':hallcode}):
         mdb.insert_hallcode(hallcode)
-    if not mdb['machine_details'].find({'machine_type':machine_type, 'ancestors':[hallcode]}):
+    if not mdb.machine_details.find({'machine_type':machine_type, 'ancestors':[hallcode]}):
         mdb.set_machine_type(hallcode, machine_type)
-    if not mdb['machine_details'].find({'machine':machine, 'ancestors':[hallcode, machine_type]}):
+    if not mdb.machine_details.find({'machine':machine, 'ancestors':[hallcode, machine_type]}):
         mdb.insert_machine(hallcode, machine_type, machine)
 
 def sign_in(gh, account_id, account_ps):
@@ -139,7 +138,7 @@ def sign_in(gh, account_id, account_ps):
     """
     page, resources = gh.open("http://fe.site777.tv/data/yahoo/login.php")
     gh.wait_for_selector('input[name=login]')
-    
+    print page.url 
     result, resources = gh.set_field_value("input[name=login]", account_id) #"gopachipro")
     result, resources = gh.set_field_value("input[name=passwd]", account_ps) #"pachi.pro.2014")
     result, resources = gh.click(".btnLogin", expect_loading=True)
@@ -155,20 +154,22 @@ def sign_in(gh, account_id, account_ps):
     result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
     print result.url
     if 'yahoo' in str(result.url):
-        return False
+	print "login failed."
+        return False,
     else:
-        return True
+	print "login!."
+        return True, result, resources
 
 def start_crawling(hallcode=hall_code, machine_types=machine_type,
          account_id=username, account_ps=password):
     """start_crawling"""
 
+    print hallcode, machine_types, account_id, account_ps
     gh = Ghost(user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36", wait_timeout=100);
     loged = sign_in(gh, account_id, account_ps)
-    if not loged:
-        print "login failed."
+    if not loged[0]:
         return
-
+    result = loged[1]
     time.sleep(2)
     u = "/".join(str(result.url).split("/")[:-1]) + "/" + "HallSelectLink.do?hallcode=" + hallcode
     print u
