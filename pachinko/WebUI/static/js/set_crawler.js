@@ -89,6 +89,7 @@ $(document).ready(function(){
         var password = this.value;
         var account = $("input[name='username']").val();
         $.ajax({
+            dataType:'json',
             url:"/check_yahoo_account",
             data:{'username':account, 'password':password},
             success: function (data) {
@@ -99,6 +100,6 @@ $(document).ready(function(){
                 }
             }
         });
-    })
+    });
 
 });
