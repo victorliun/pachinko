@@ -4,6 +4,7 @@ from flask import Flask, g, session, redirect, \
         url_for, escape, request, render_template,\
         make_response, request, current_app
 import os
+import logging
 from functools import update_wrapper
 from datetime import timedelta
 from connectMongo import DBConnection
@@ -14,6 +15,7 @@ from bson import json_util
 from functools import wraps
 from ghost import Ghost
 from utils import sign_in
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -314,12 +316,12 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
                 try:
                     ranges.append(int(cl['machine_range']))
                 except ValueError, err:
-                    print "Range:%s is not a integer." %cl['machine_range']
+                    logging.warning( "Range:%s is not a integer." %cl['machine_range'])
             elif cl.has_key('range'):
                 try:
                     ranges.append(int(cl['range']))
                 except ValueError, err:
-                    print "Range:%s is not a integer." %cl['range']
+                    logging.warning( "Range:%s is not a integer." %cl['range'])
         if ranges:
             resp['range'] = int(round(reduce(lambda x,y: x+y, ranges)/len(ranges)))
         else:

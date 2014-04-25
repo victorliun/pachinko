@@ -229,7 +229,11 @@ def goToMachines(gh, hallcode):
                 js_link = js_link[0]
                 if "tableHistoryClick" in js_link:
                     if len(machine_range) > 0:
-                        machine_range = machine_range[0]
+                        try:
+                            int (machine_range[0])
+                            machine_range = machine_range[0]
+                        except ValueError, ve:
+                            machine_range = ""
                     else:
                         machine_range = ""
                     js_link = js_link.replace("javascript:", "")
@@ -244,5 +248,6 @@ def goToMachines(gh, hallcode):
 
 
 if __name__=="__main__":
+
     start_crawling()
     
