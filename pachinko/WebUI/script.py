@@ -197,7 +197,7 @@ def getSpinCount(data):
         dt = post["date"]
         try:
             c_cnt[dt] += int(post["spin_count_of_win"])
-        except ValueError err:
+        except ValueError, err:
             pass
 
         if len(post["time_of_win"]) > 3:
