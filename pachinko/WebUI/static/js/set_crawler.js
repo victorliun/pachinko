@@ -116,20 +116,20 @@ $(document).ready(function(){
     });
 
     //validate yahoo account
-    $("input[name='password']").blur(function(){
+    $("input[name='username']").blur(function(){
         var password = this.value;
         var account = $("input[name='username']").val();
         $.ajax({
+            contentType:"application/json; charset=UTF-8",
             dataType:'json',
-            url:"/check_yahoo_account",
-            data:{'username':account, 'password':password},
+            url:"/check_yahoo_account?username=" +account,
             success: function (data) {
-                if (data.status){
-                    $("#yahoo_helper").hide();
-                }else{
+                if (data.ResultCode != 'SUCCESS'){
                     $("#yahoo_helper").show();
+                }else{
+                    $("#yahoo_helper").hide();
                 }
-            }
+            },
         });
     });
 

@@ -16,7 +16,7 @@ from functools import wraps
 from ghost import Ghost
 from utils import sign_in
 from scrape_data import start_crawling
-
+import urllib
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -136,6 +136,7 @@ def set_crawler():
         target_machine_types = request.form['target_machine_types']
         signal = request.form['signal']
         res = {}
+        target_machine_types = filter(lambda x: x,target_machine_types.split(','))
         print request.form
         if signal == "START":
             logging.warning("start crawling:")
@@ -387,20 +388,13 @@ def get_codes():
 def check_yahoo_accout():
     """
     check yahoo accout is availale or not.
-    try login
     """
-    password = request.args.get('password')
+    #password = request.args.get('password')
     username = request.args.get('username')
-    print password, username
-    gh = Ghost(user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36", wait_timeout=100);
-    loged = sign_in(gh, username, password)
-    gh.exit()
-    resp = {}
-    if loged[0]:
-        resp['status'] = True
-    else:
-        resp['status'] = False
-    return json.dumps(resp)
+    url = "https://edit.yahoo.com/reg_json?PartnerName=yahoo_default&AccountID="+username+ "&ApiName=ValidateFields"
+    res = urllib.urlopen(url).read()
+    res = json.loads(res)
+    return json.dumps(res)
 
 
 @app.route('/getHallcode/column=<column>')
