@@ -219,10 +219,10 @@ def getSpinCount(data):
         r["date"] = c
         r["time_of_win"] = ""
         r["value"] = c_cnt[c]
-        r["max_win_number"] = c_max[c]
-        r["closingspincount"] = c_max_time_win[c]
-        r["singlewinsspincount"] = renchan_wins[c]
-        r["renchan"] = renchan_count[c]
+        r["max_win_number"] = c_max.get(c, '')
+        r["closingspincount"] = c_max_time_win.get(c, '')
+        r["singlewinsspincount"] = renchan_wins.get(c, '')
+        r["renchan"] = renchan_count.get(c, '')
         if totalwins[dt] == -1:
             r["totalwins"] = 0
         else:
