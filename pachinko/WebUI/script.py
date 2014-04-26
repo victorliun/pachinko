@@ -147,7 +147,7 @@ def set_crawler():
             res['status'] = "Start crawling"
         elif signal == "STOP":
             logging.warning("stop crawling")
-            stop_e.set()
+            crawler_stop.set()
             res['status'] = "Stop crawling"
         return json.dumps(res)
 
