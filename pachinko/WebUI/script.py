@@ -93,7 +93,6 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if(request.method == 'POST'):
-        print request.form['password']
         if(request.form['username'] == 'app' and request.form['password'] == 'password'):
             session['username'] = request.form['username']
             next = request.args.get('next')
@@ -101,7 +100,7 @@ def login():
                 next = '/home'
             else:
                 next = next.split('/',3)[-1]
-        return redirect(next)
+            return redirect(next)
     return render_template('login_page.html')
 
 @app.route('/logout')
