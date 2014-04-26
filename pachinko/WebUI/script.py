@@ -14,7 +14,7 @@ from encoder import Encoder
 from bson import json_util
 from functools import wraps
 from ghost import Ghost
-from utils import sign_in
+from utils import stop_crawling
 from scrape_data import start_crawling
 import urllib
 
@@ -119,9 +119,6 @@ def home():
 def analysis():
     return render_template('get_data.html')
 
-import threading
-crawler_stop = threading.Event()
-
 @app.route('/set-crawler', methods=['POST','GET'])
 @login_required
 def set_crawler():
@@ -140,13 +137,12 @@ def set_crawler():
         if signal == "START":
             logging.warning("start crawling:")
             dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
-            crawler = threading.Thread(target=start_crawling, args=(username, password, 
-                target_hallcode, target_machine_types, crawler_stop))
-            crawler.start()
+            start_crawling(username, password, 
+                target_hallcode, target_machine_types)
             res['status'] = "Start crawling"
         elif signal == "STOP":
             logging.warning("stop crawling")
-            crawler_stop.set()
+            stop_crawling()
             res['status'] = "Stop crawling"
         return json.dumps(res)
 

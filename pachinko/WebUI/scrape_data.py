@@ -24,11 +24,7 @@ for md in meta_data_l:
 
 today_date = time.strftime("%Y-%m-%d")
 
-hall_code = "27081001"
-hall_code = "29008002"
 hall_code = meta_data["targetHallocde"]
-machine_type = "024134"
-machine_type = "023979"
 machine_type = meta_data["targetmachinetype"].split(",")
 
 username = meta_data["username"]
@@ -136,7 +132,7 @@ def getData(gh, hallcode, machine_range):
 
 
 def start_crawling(hallcode=hall_code, machine_types=machine_type,
-         account_id=username, account_ps=password, stop_event=None):
+         account_id=username, account_ps=password):
     """start_crawling"""
 
     print hallcode, machine_types, account_id, account_ps
@@ -160,7 +156,7 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
     
     print machine_condition
 
-    while not stop_event.is_set():
+    while True:
         js = """
         var qwe = -1;
         var buttons = document.getElementsByTagName('input');
@@ -205,10 +201,6 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
         """
         result, resources = gh.evaluate(js, expect_loading=True)
 
-    if stop_event and stop_event.is_set():
-        logging.warning('stop manually')
-    else:
-        logging.warning('finish')
     gh.exit()
     print "ghost exits."
 
@@ -252,6 +244,5 @@ def goToMachines(gh, hallcode):
 
 
 if __name__=="__main__":
-
     start_crawling()
     

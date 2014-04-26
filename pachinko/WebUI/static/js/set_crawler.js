@@ -2,6 +2,12 @@
 var SetCrawler = {
     crawler_stop : function (tag){
         $(tag).val('START');
+        var text = $("input");
+        for(var i=0;i<text.length;i++){
+            if (text[i].type!='button'){
+                $(text[i]).removeAttr('disabled');
+            }
+        }
         $('input[name="signal"]').val('STOP');
         // stoping crawling
         $.ajax({
@@ -10,10 +16,10 @@ var SetCrawler = {
             data: $("form").serialize(),
             dataType:'json',
             success:function(data){
-                $('#log').html(data.status);
-                $('#log').fadeIn(500).delay(1000);  
+                
             }
-        })
+        });
+
     },
     crawler_start: function(tag) {
         $(tag).val("STOP");
@@ -24,11 +30,26 @@ var SetCrawler = {
             url:'/set-crawler',
             data:$("form").serialize(),
             dataType:'json',
-            success:function(data){
-                $('#log').html(data.status);
-                $('#log').fadeIn(500).delay(1000);   
+            success:function(data){ 
+                var now = new Date();
+                var year = now.getFullYear();
+                var month = now.getMonth()+1;
+                var date = now.getDate();
+                var hours = now.getHours();
+                var mins = now.getMinutes();
+                hours = mins > 55 ? hours + 1 : hours;
+                mins = 55;
+                time = year+"/"+month+"/"+date+" "+hours+':'+mins;
+                $('#log span').html(time);   
             }
         });
+
+        var text = $("input");
+        for(var i=0;i<text.length;i++){
+            if (text[i].type!='button'){
+                $(text[i]).attr('disabled', 'true');
+            }
+        }
     },
     enableMachineTypesAutocomplete : function(val){
         $("#target_machine_types").bind( "keydown", function( event ) {
@@ -42,9 +63,6 @@ var SetCrawler = {
         }).autocomplete({
             minLength:1,
             source: "/get_codes?hallcode="+val,
-            focus: function() {
-              return true;
-            },
             select: function( event, ui ) {
               var terms = this.value.split(/,\s*/);
               // remove the current input
@@ -57,7 +75,7 @@ var SetCrawler = {
               return false;
             },
             change: function( event,ui){
-                if (this.value.match(/^\d+(,\s*\d+)*(,\s)?$/) != null){
+                if (this.value.match(/^\d{6}(,\s*\d{6})*(,\s?)?$/) != null){
                     $("#machine_type_helper").hide();
                 }
                 else {
@@ -70,16 +88,15 @@ var SetCrawler = {
 $(document).ready(function(){
     // validate and submit form
     $("input[type='button']").click(function(){
-        text = $("input");
+        var text = $("input");
         for(var i=0;i<text.length;i++){
             if (!text[i].value){
-                alert("All field must be filled up.");
+                alert("All fields must be filled up to start.");
                 return;
             }
         }
         if( $(".helper:visible").length != 0)
         {
-
             return;
         }
         
@@ -102,19 +119,26 @@ $(document).ready(function(){
         source: "/get_codes",
         select: function( event, ui ) {
             this.value = ui.item.value;
-            SetCrawler.enableMachineTypesAutocomplete(this.value);
             return false;
         },
         change: function( event,ui){
-            if (this.value.match(/^\d+\s*$/) != null){
+            if (this.value.match(/^\d{8}\s*$/) != null){
                 $("#hallcode_helper").hide();
             }
             else {
                 $("#hallcode_helper").show();
             }
+            SetCrawler.enableMachineTypesAutocomplete(this.value);
         }
     });
-
+    $("input[name='target_machine_types']").blur(function(){
+        if (this.value.match(/^\d{6}(,\s*\d{6})*(,\s)?$/) != null){
+            $("#machine_type_helper").hide();
+        }
+        else {
+            $("#machine_type_helper").show();
+        }
+    });
     //validate yahoo account
     $("input[name='username']").blur(function(){
         var password = this.value;

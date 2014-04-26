@@ -30,3 +30,9 @@ def sign_in(gh, account_id, account_ps):
     else:
         print "loged in!."
         return True, result, resources
+
+def stop_crawling():
+    """
+    stop cron job
+    """
+    pass

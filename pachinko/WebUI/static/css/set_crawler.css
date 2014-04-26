@@ -36,7 +36,7 @@ input[type=submit] {
 div#log {
     margin: 60px auto;
     width:60%;
-    color: black;
+    color: red;
 }
 
 input[type="button"] {
