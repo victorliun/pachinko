@@ -12,24 +12,24 @@
 <form action="" method="post" name="crawler_settings">
     <div id="username_input">
         <label>A. Yahoo! Login: </label>
-        <input type="text" name="username" placeholder="username" value=''>        
-        <input type="password" name="password" placeholder="password" value=''>  
+        <input type="text" name="username" placeholder="username" value='{{form.username}}'>        
+        <input type="password" name="password" placeholder="password" value='{{form.password}}'>  
         <span id="yahoo_helper" class="helper">Invalid yahoo account.</span>
     </div>
     <div id="target_hall_input">
         <label>B1. Target Hallcode:</label>
-        <input type="text" name="target_hallcode" id="target_hallcode" value=''>        
+        <input type="text" name="target_hallcode" id="target_hallcode" value='{{form.target_hallcode}}'>        
         <span id="hallcode_helper" class="helper">Invalid hall code.</span>
     </div>
     <div id="machine_type_input">
         <label>C1. Target MachineType:</label>
-        <input type="text" name="target_machine_types" id="target_machine_types" value=''>
+        <input type="text" name="target_machine_types" id="target_machine_types" value='{{form.target_machine_types}}'>
         <span id="machine_type_helper" class="helper">Invalid machine type.</span>
     </div>
-    <input type='hidden' name='signal' value="START">
+    <input type='hidden' name='signal' value="{{form.signal}}">
     <div id="submit"><input type="button" value="START"></div>
 </form>
 <div id='log'>
-    Next crawl time: <span id='next_time'><span>
+    Next crawling time: <span id='next_run_time'>{{form.next_run_time}}<span>
 </div>
 {%endblock%}

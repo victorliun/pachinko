@@ -14,9 +14,10 @@ from encoder import Encoder
 from bson import json_util
 from functools import wraps
 from ghost import Ghost
-from utils import stop_crawling
+from utils import stop_crawling, read_form, clean_form, save_form
 from scrape_data import start_crawling
 import urllib
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -31,6 +32,13 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
+def get_next_run_time():
+    """return next next_run_time"""
+    now = datetime.now()
+    hour = now.hour if now.minute > 55 else now.hour+1
+    minute = 55
+    return "%s/%s/%s %s:%s" %(now.year, now.month, now.day, hour, minute)
 
 @app.before_request
 def before_request():
@@ -123,7 +131,11 @@ def analysis():
 @login_required
 def set_crawler():
     if request.method == "GET":
-        return render_template('set_crawler.html', msg='')
+        if not os.path.exists('crawler_last_setting.json'):
+            clean_form()
+        form = read_form()
+        form = json.loads(form)
+        return render_template('set_crawler.html', form=form)
 
     if(request.method == 'POST'):
         username = request.form['username']
@@ -132,17 +144,24 @@ def set_crawler():
         target_machine_types = request.form['target_machine_types']
         signal = request.form['signal']
         res = {}
-        target_machine_types = filter(lambda x: x,target_machine_types.split(','))
-        print request.form
+        form_dict = {}
+        form_dict['username'] = username
+        form_dict['password'] = password
+        form_dict['target_hallcode'] = target_hallcode
+        form_dict['target_machine_types'] = target_machine_types
+        form_dict['signal'] = signal
+        form_dict['next_run_time'] = get_next_run_time()
         if signal == "START":
             logging.warning("start crawling:")
-            dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
-            start_crawling(username, password, 
-                target_hallcode, target_machine_types)
+            target_machine_types = filter(lambda x: x,target_machine_types.split(','))  
+            #dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
+            #start_crawling(username, password, 
+            #    target_hallcode, target_machine_types)
+            save_form(json.dumps(form_dict))
             res['status'] = "Start crawling"
         elif signal == "STOP":
             logging.warning("stop crawling")
-            stop_crawling()
+            clean_form()
             res['status'] = "Stop crawling"
         return json.dumps(res)
 

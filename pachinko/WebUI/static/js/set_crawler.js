@@ -90,7 +90,7 @@ $(document).ready(function(){
     $("input[type='button']").click(function(){
         var text = $("input");
         for(var i=0;i<text.length;i++){
-            if (!text[i].value){
+            if (text[i].type != 'hidden' && !text[i].value){
                 alert("All fields must be filled up to start.");
                 return;
             }
@@ -156,5 +156,14 @@ $(document).ready(function(){
             },
         });
     });
+    if($("input[name='signal']").val() == "START"){
+        var text = $("input");
+        for(var i=0;i<text.length;i++){
+            if (text[i].type!='button'){
+                $(text[i]).attr('disabled', 'true');
+            }
+        }
+        $("input[type='button']").val("STOP");
 
+    }
 });

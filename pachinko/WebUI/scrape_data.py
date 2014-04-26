@@ -9,7 +9,6 @@ from functools import wraps
 from datetime import datetime
 from pymongo import Connection
 from connectMongo import DBConnection 
-from utils import sign_in
 
 logger = logging.getLogger("ghost")
 logging.basicConfig(level=logging.DEBUG)
@@ -29,8 +28,6 @@ machine_type = meta_data["targetmachinetype"].split(",")
 
 username = meta_data["username"]
 password = meta_data["password"]
-
-print hall_code, machine_type, username, password
 
 def getData(gh, hallcode, machine_range):
     con = Connection()
@@ -131,11 +128,39 @@ def getData(gh, hallcode, machine_range):
         mdb.insert_machine(hallcode, machine_type, machine)
 
 
+def sign_in(gh, account_id, account_ps):
+    """
+    Check yahoo account name and password if it is correct
+    """
+    page, resources = gh.open("http://fe.site777.tv/data/yahoo/login.php")
+    print page.url 
+    gh.wait_for_selector('input[name=login]')
+    result, resources = gh.set_field_value("input[name=login]", account_id) #"gopachipro")
+    result, resources = gh.set_field_value("input[name=passwd]", account_ps) #"pachi.pro.2014")
+    result, resources = gh.click(".btnLogin", expect_loading=True)
+    print 2
+    time.sleep(2)
+
+    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
+    time.sleep(3)
+    print 3
+    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
+    time.sleep(4)
+    print 4
+    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
+    print result.url
+    if 'yahoo' in str(result.url):
+        print "login failed."
+        return False,
+    else:
+        print "loged in!."
+        return True, result, resources
+
 def start_crawling(hallcode=hall_code, machine_types=machine_type,
          account_id=username, account_ps=password):
     """start_crawling"""
 
-    print hallcode, machine_types, account_id, account_ps
+    logging.warning("%s,%s,%s,%s" %(hallcode, machine_types, account_id, account_ps))
     gh = Ghost(user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36", wait_timeout=100);
     loged = sign_in(gh, account_id, account_ps)
     if not loged[0]:
