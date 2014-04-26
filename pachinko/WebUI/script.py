@@ -187,17 +187,19 @@ from collections import defaultdict
 def getSpinCount(data):
     c_cnt = defaultdict(int)
     c_max = defaultdict(int)
-    c_max_time = {}
-    c_max_time_win = {}
+    c_max_time = defaultdict(int)
+    c_max_time_win = defaultdict(int)
     renchan_wins = defaultdict(list)
     renchan_count = defaultdict(int)
     totalwins = defaultdict(int)
     ret = []
     for post in data:
         dt = post["date"]
-        if dt not in c_max_time:
-            c_max_time[dt] = ""
-        c_cnt[dt] += post["spin_count_of_win"]
+        try:
+            c_cnt[dt] += int(post["spin_count_of_win"])
+        except ValueError err:
+            pass
+
         if len(post["time_of_win"]) > 3:
             if post["win_number"] != "--" and c_max[dt] < post["win_number"]:
                 c_max[dt] = post["win_number"]
