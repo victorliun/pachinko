@@ -15,6 +15,7 @@ from bson import json_util
 from functools import wraps
 from ghost import Ghost
 from utils import sign_in
+from scrape_data import start_crawling
 
 
 app = Flask(__name__)
@@ -119,22 +120,35 @@ def home():
 def analysis():
     return render_template('get_data.html')
 
+import threading
+crawler_stop = threading.Event()
+
 @app.route('/set-crawler', methods=['POST','GET'])
 @login_required
 def set_crawler():
+    if request.method == "GET":
+        return render_template('set_crawler.html', msg='')
+
     if(request.method == 'POST'):
         username = request.form['username']
         password = request.form['password']
         target_hallcode = request.form['target_hallcode']
         target_machine_types = request.form['target_machine_types']
         signal = request.form['signal']
+        res = {}
+        print request.form
         if signal == "START":
+            logging.warning("start crawling:")
             dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
-            res = start_crawling(username, password, target_hallcode, target_machine_types)
+            crawler = threading.Thread(target=start_crawling, args=(username, password, 
+                target_hallcode, target_machine_types, crawler_stop))
+            crawler.start()
+            res['status'] = "Start crawling"
         elif signal == "STOP":
-            stop_crawling()
+            logging.warning("stop crawling")
+            stop_e.set()
+            res['status'] = "Stop crawling"
         return json.dumps(res)
-    return render_template('set_crawler.html', msg='')
 
 @app.route('/update')
 @login_required

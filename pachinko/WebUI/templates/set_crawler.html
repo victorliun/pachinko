@@ -9,26 +9,26 @@
 {%block page_header%}Setting the Crawler{%endblock%}
 
 {%block content%}
-<form action="" method="post">
+<form action="" method="post" name="crawler_settings">
     <div id="username_input">
         <label>A. Yahoo! Login: </label>
-        <input type="text" name="username" placeholder="username">        
-        <input type="password" name="password" placeholder="password">  
+        <input type="text" name="username" placeholder="username" value=''>        
+        <input type="password" name="password" placeholder="password" value=''>  
         <span id="yahoo_helper" class="helper">Not an available account.</span>
     </div>
     <div id="target_hall_input">
         <label>B1. Target Hallcode:</label>
-        <input type="text" name="target_hallcode" id="target_hallcode">        
+        <input type="text" name="target_hallcode" id="target_hallcode" value=''>        
         <span id="hallcode_helper" class="helper">Only numbers allowed.</span>
     </div>
     <div id="machine_type_input">
         <label>C1. Target MachineType:</label>
-        <input type="text" name="target_machine_types" id="target_machine_types">
+        <input type="text" name="target_machine_types" id="target_machine_types" value=''>
         <span id="machine_type_helper" class="helper">Only comma separated numbers allowed.</span>
     </div>
+    <input type='hidden' name='signal' value="START">
     <div id="submit"><input type="button" value="START"></div>
 </form>
 <div id='log'>
-    {{ msg }}
 </div>
 {%endblock%}

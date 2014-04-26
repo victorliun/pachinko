@@ -8,14 +8,14 @@ from scrapy.selector import HtmlXPathSelector
 from functools import wraps
 from datetime import datetime
 from pymongo import Connection
-from WebUI.connectMongo import DBConnection 
-from WebUI.utils import sign_in
+from connectMongo import DBConnection 
+from utils import sign_in
 
 logger = logging.getLogger("ghost")
 logging.basicConfig(level=logging.DEBUG)
 import time
 
-import WebUI.connectMongoCrawler as cmc
+import connectMongoCrawler as cmc
 
 meta_data_l = cmc.DBCrawlerConnection().getLatestCrawlerDetails()
 meta_data = {}
@@ -136,7 +136,7 @@ def getData(gh, hallcode, machine_range):
 
 
 def start_crawling(hallcode=hall_code, machine_types=machine_type,
-         account_id=username, account_ps=password):
+         account_id=username, account_ps=password, stop_event=None):
     """start_crawling"""
 
     print hallcode, machine_types, account_id, account_ps
@@ -160,7 +160,7 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
     
     print machine_condition
 
-    while True:
+    while not stop_event.is_set():
         js = """
         var qwe = -1;
         var buttons = document.getElementsByTagName('input');
@@ -205,6 +205,10 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
         """
         result, resources = gh.evaluate(js, expect_loading=True)
 
+    if stop_event and stop_event.is_set():
+        logging.warning('stop manually')
+    else:
+        logging.warning('finish')
     gh.exit()
     print "ghost exits."
 

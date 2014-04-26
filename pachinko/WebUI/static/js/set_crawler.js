@@ -2,11 +2,33 @@
 var SetCrawler = {
     crawler_stop : function (tag){
         $(tag).val('START');
+        $('input[name="signal"]').val('STOP');
         // stoping crawling
+        $.ajax({
+            type: "POST",
+            url:'/set-crawler',
+            data: $("form").serialize(),
+            dataType:'json',
+            success:function(data){
+                $('#log').html(data.status);
+                $('#log').fadeIn(500).delay(1000);  
+            }
+        })
     },
     crawler_start: function(tag) {
         $(tag).val("STOP");
+        $('input[name="signal"]').val('START');
         // start crawling
+        $.ajax({
+            type: "POST",
+            url:'/set-crawler',
+            data:$("form").serialize(),
+            dataType:'json',
+            success:function(data){
+                $('#log').html(data.status);
+                $('#log').fadeIn(500).delay(1000);   
+            }
+        });
     },
     enableMachineTypesAutocomplete : function(val){
         $("#target_machine_types").bind( "keydown", function( event ) {
@@ -35,7 +57,7 @@ var SetCrawler = {
               return false;
             },
             change: function( event,ui){
-                if (this.value.match(/^\d+(,\s*\d+)*$/) != null){
+                if (this.value.match(/^\d+(,\s*\d+)*(,\s)?$/) != null){
                     $("#machine_type_helper").hide();
                 }
                 else {
@@ -48,8 +70,16 @@ var SetCrawler = {
 $(document).ready(function(){
     // validate and submit form
     $("input[type='button']").click(function(){
-        if( $(".helper").length != 0)
+        text = $("input");
+        for(var i=0;i<text.length;i++){
+            if (!text[i].value){
+                alert("All field must be filled up.");
+                return;
+            }
+        }
+        if( $(".helper:visible").length != 0)
         {
+
             return;
         }
         
@@ -71,6 +101,7 @@ $(document).ready(function(){
         minLength: 1,
         source: "/get_codes",
         select: function( event, ui ) {
+            this.value = ui.item.value;
             SetCrawler.enableMachineTypesAutocomplete(this.value);
             return false;
         },

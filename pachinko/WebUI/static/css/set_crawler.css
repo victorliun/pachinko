@@ -41,6 +41,7 @@ div#log {
 
 input[type="button"] {
     width: 300px;
+    height: 28px;
     border: 0px;
     background-color: #003f6f;
     color: white;
