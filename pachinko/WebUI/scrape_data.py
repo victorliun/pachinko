@@ -193,7 +193,7 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
     gh = Ghost(user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36", wait_timeout=100);
     loged = sign_in(gh, account_id, account_ps)
     if not loged[0]:
-        ghost.exit()
+        gh.exit()
         return
     result = loged[1]
     time.sleep(2)

@@ -158,8 +158,7 @@ def set_crawler():
             logging.warning("start crawling:")
             target_machine_types = filter(lambda x: x,target_machine_types.split(','))  
             dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
-            start_crawling(username, password, 
-                target_hallcode, target_machine_types)
+            start_crawling(target_hallcode, target_machine_types, username, password)
             save_form(json.dumps(form_dict))
             start_cron()
             res['status'] = "Start crawling"
