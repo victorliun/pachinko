@@ -29,6 +29,32 @@ machine_type = meta_data["targetmachinetype"].split(",")
 username = meta_data["username"]
 password = meta_data["password"]
 
+
+loaded_machines = {}
+
+def getNextMachine(ghost):
+    print loaded_machines, len(loaded_machines)
+    js = """
+    var done = """ + json.dumps(loaded_machines.keys()) + """;
+    var buttons = document.getElementsByTagName('a');
+    var clicked_href = {};
+    var qwe = 100;
+    for(var i=0; i<buttons.length; i++){
+        if(buttons[i].href.indexOf("tableHistoryClick") != -1){
+                if(done.indexOf(buttons[i].href) == -1){
+                        qwe = buttons[i].href;
+                        break;
+                }
+        }
+    } 
+    qwe;
+    """
+    print js
+    result, resources = ghost.evaluate(js)
+    print "extracted machinetype", result
+    loaded_machines[str(result)] = 1
+    return result
+
 def getData(gh, hallcode, machine_range):
     con = Connection()
     content = unicode(gh.content)
@@ -66,66 +92,66 @@ def getData(gh, hallcode, machine_range):
         if i == 0:
             i = 1
         continue
-    res = {}
-    res["timestamp"] = datetime.now()
-    res["hallcode"] = hallcode
-    res["machine_type"] = machine_type
-    res["machine"] = machine
-    res["date"] = today_date
-    res["renchan"] = 0
-    res["machine_range"] = machine_range
-    hxs2 = HtmlXPathSelector(text=r)
-    cells = hxs2.select('//td/text()').extract() + hxs2.select('//th/text()').extract()
-    jr = []
-    res["win_number"] = cells[0].strip()
-    if "*" in res["win_number"]:
-        res["renchan"] = 1
-    else:
+        res = {}
+        res["timestamp"] = datetime.now()
+        res["hallcode"] = hallcode
+        res["machine_type"] = machine_type
+        res["machine"] = machine
+        res["date"] = today_date
         res["renchan"] = 0
-    try:
-        res["win_number"] = int(res["win_number"].replace("*", "").strip())
-    except:
-        pass
-    try:
-        res["column5"] = cells[4].strip()
-    except:
-        pass
-    res["time_of_win"] = cells[1].strip()
-    res["spin_count_of_win"] = cells[2].strip()
-    try:
-        res["spin_count_of_win"] = int(cells[2].strip())
-    except:
-        pass
-
-    try:
-        res["total_balls_out"] = int(cells[3].strip())
-    except:
+        res["machine_range"] = machine_range
+        hxs2 = HtmlXPathSelector(text=r)
+        cells = hxs2.select('//td/text()').extract() + hxs2.select('//th/text()').extract()
+        jr = []
+        res["win_number"] = cells[0].strip()
+        if "*" in res["win_number"]:
+            res["renchan"] = 1
+        else:
+            res["renchan"] = 0
         try:
-            res["total_balls_out"] = cells[3].strip()
+            res["win_number"] = int(res["win_number"].replace("*", "").strip())
+        except:
+            pass
+        try:
+            res["column5"] = cells[4].strip()
+        except:
+            pass
+        res["time_of_win"] = cells[1].strip()
+        res["spin_count_of_win"] = cells[2].strip()
+        try:
+            res["spin_count_of_win"] = int(cells[2].strip())
         except:
             pass
 
-    for c in cells:
-        jr.append(c.strip())
-    
-    jackpots.append(jr)
-    key = {}
-    key["hallcode"] = hallcode
-    key["machine"] = machine
-    key["date"] = today_date
-    key["time_of_win"] = cells[1].strip()
-#   print res
-    con["pachinko_data2"]["data"].update(key, res, upsert=True)
+        try:
+            res["total_balls_out"] = int(cells[3].strip())
+        except:
+            try:
+                res["total_balls_out"] = cells[3].strip()
+            except:
+                pass
+
+        for c in cells:
+            jr.append(c.strip())
+        
+        jackpots.append(jr)
+        key = {}
+        key["hallcode"] = hallcode
+        key["machine"] = machine
+        key["date"] = today_date
+        key["time_of_win"] = cells[1].strip()
+    #   print res
+        con["pachinko_data2"]["data"].update(key, res, upsert=True)        
+        #save hallcode, machine_type, machine if one is new
+        mdb = DBConnection()
+        if not mdb.machine_details.find({'hallcode':hallcode}):
+            mdb.insert_hallcode(hallcode)
+        if not mdb.machine_details.find({'machine_type':machine_type, 'ancestors':[hallcode]}):
+            mdb.set_machine_type(hallcode, machine_type)
+        if not mdb.machine_details.find({'machine':machine, 'ancestors':[hallcode, machine_type]}):
+            mdb.insert_machine(hallcode, machine_type, machine)
     dump["series"] = jackpots
     con["pachinko_dump2"]["data"].insert(dump)
-    #save hallcode, machine_type, machine if one is new
-    mdb = DBConnection()
-    if not mdb.machine_details.find({'hallcode':hallcode}):
-        mdb.insert_hallcode(hallcode)
-    if not mdb.machine_details.find({'machine_type':machine_type, 'ancestors':[hallcode]}):
-        mdb.set_machine_type(hallcode, machine_type)
-    if not mdb.machine_details.find({'machine':machine, 'ancestors':[hallcode, machine_type]}):
-        mdb.insert_machine(hallcode, machine_type, machine)
 
 
 def sign_in(gh, account_id, account_ps):
@@ -164,6 +190,7 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
     gh = Ghost(user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36", wait_timeout=100);
     loged = sign_in(gh, account_id, account_ps)
     if not loged[0]:
+        ghost.exit()
         return
     result = loged[1]
     time.sleep(2)
@@ -267,6 +294,32 @@ def goToMachines(gh, hallcode):
                     result, resources = gh.evaluate(js, expect_loading=True)
                     time.sleep(2)
 
+def goToMachines_vc(ghost):
+    res = 0
+    while True:
+        res = getNextMachine(ghost)
+        if "javascript" in str(res):
+            js = """
+            var a = \"""" + str(res) + """\";
+            var buttons = document.getElementsByTagName('a');
+            var clicked_href = {};
+            for(var i=0; i<buttons.length; i++){
+            if(buttons[i].href.indexOf("tableHistoryClick") != -1){
+                if(a == buttons[i].href){
+                    buttons[i].click();
+                    break;
+                }
+            }
+            } """
+            result, resources = ghost.evaluate(js, expect_loading=True)
+            getData(ghost, hall_code)
+            js = """
+            history.go(-1);
+            """
+            result, resources = ghost.evaluate(js, expect_loading=True)
+            time.sleep(2)
+        else:
+            break
 
 if __name__=="__main__":
     start_crawling()
