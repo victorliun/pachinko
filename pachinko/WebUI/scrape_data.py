@@ -189,7 +189,6 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
          account_id=username, account_ps=password):
     """start_crawling"""
     
-    save_next_crawling_time()
     logging.warning("%s,%s,%s,%s" %(hallcode, machine_types, account_id, account_ps))
     gh = Ghost(user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36", wait_timeout=100);
     loged = sign_in(gh, account_id, account_ps)
@@ -201,6 +200,7 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
     u = "/".join(str(result.url).split("/")[:-1]) + "/" + "HallSelectLink.do?hallcode=" + hallcode
     print u
 
+    
     result, resources = gh.open(u)
     button_index = 0
 
@@ -211,7 +211,7 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
     machine_condition = " && ( " + machine_condition + " )"
     
     print machine_condition
-
+    save_next_crawling_time()
     while True:
         js = """
         var qwe = -1;
