@@ -18,6 +18,7 @@ from utils import *
 from scrape_data import start_crawling
 import urllib
 from datetime import datetime
+import threading
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -158,10 +159,12 @@ def set_crawler():
             logging.warning("start crawling:")
             target_machine_types = filter(lambda x: x,target_machine_types.split(','))  
             dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
-            start_crawling(target_hallcode, target_machine_types, username, password)
             save_form(json.dumps(form_dict))
             start_cron()
             res['status'] = "Start crawling"
+            th = threading.Thread(target=start_crawling, args = (target_hallcode, target_machine_types, username, password))
+            th.daemon = True
+            th.start()
         elif signal == "STOP":
             logging.warning("stop crawling")
             clean_form()
