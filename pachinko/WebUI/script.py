@@ -14,7 +14,7 @@ from encoder import Encoder
 from bson import json_util
 from functools import wraps
 from ghost import Ghost
-from utils import stop_crawling, read_form, clean_form, save_form
+from utils import *
 from scrape_data import start_crawling
 import urllib
 from datetime import datetime
@@ -36,9 +36,12 @@ def login_required(f):
 def get_next_run_time():
     """return next next_run_time"""
     now = datetime.now()
-    hour = now.hour if now.minute > 55 else now.hour+1
-    minute = 55
-    return "%s/%s/%s %s:%s" %(now.year, now.month, now.day, hour, minute)
+    if now.minute < 55:
+        plus = 55 - now.minute
+    else:
+        plus = 60 - (now.minute - 55)
+    next_run_time = now + timedelta(minutes=plus)
+    return next_run_time.strftime("%Y/%m/%d %H:%M")
 
 @app.before_request
 def before_request():
@@ -154,14 +157,16 @@ def set_crawler():
         if signal == "START":
             logging.warning("start crawling:")
             target_machine_types = filter(lambda x: x,target_machine_types.split(','))  
-            #dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
-            #start_crawling(username, password, 
-            #    target_hallcode, target_machine_types)
+            dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
+            start_crawling(username, password, 
+                target_hallcode, target_machine_types)
             save_form(json.dumps(form_dict))
+            start_cron()
             res['status'] = "Start crawling"
         elif signal == "STOP":
             logging.warning("stop crawling")
             clean_form()
+            stop_cron()
             res['status'] = "Stop crawling"
         return json.dumps(res)
 

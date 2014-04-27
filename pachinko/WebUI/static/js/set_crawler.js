@@ -30,20 +30,24 @@ var SetCrawler = {
             url:'/set-crawler',
             data:$("form").serialize(),
             dataType:'json',
-            success:function(data){ 
-                var now = new Date();
-                var year = now.getFullYear();
-                var month = now.getMonth()+1;
-                var date = now.getDate();
-                var hours = now.getHours();
-                var mins = now.getMinutes();
-                hours = mins > 55 ? hours + 1 : hours;
-                mins = 55;
-                time = year+"/"+month+"/"+date+" "+hours+':'+mins;
-                $('#log span').html(time);   
+            success:function(data){   
             }
         });
-
+        
+        var now = new Date();
+        var mins = now.getMinutes() < 55;
+        if (mins < 55)
+            plus = 55 - mins
+        else
+            plus = 60 - (mins - 55)
+        now.setMinutes(mins + plus)
+        var year = now.getFullYear();
+        var month = now.getMonth()+1;
+        var date = now.getDate();
+        var hours = now.getHours();
+        mins = now.getMinutes();
+        time = year+"/"+month+"/"+date+" "+hours+':'+mins;
+        $('#log span').html(time); 
         var text = $("input");
         for(var i=0;i<text.length;i++){
             if (text[i].type!='button'){

@@ -14,6 +14,8 @@ logger = logging.getLogger("ghost")
 logging.basicConfig(level=logging.DEBUG)
 import time
 
+from utils import *
+
 import connectMongoCrawler as cmc
 
 meta_data_l = cmc.DBCrawlerConnection().getLatestCrawlerDetails()
@@ -141,6 +143,7 @@ def getData(gh, hallcode, machine_range):
         key["date"] = today_date
         key["time_of_win"] = cells[1].strip()
     #   print res
+
         con["pachinko_data2"]["data"].update(key, res, upsert=True)        
         #save hallcode, machine_type, machine if one is new
         mdb = DBConnection()
@@ -255,6 +258,20 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
 
     gh.exit()
     print "ghost exits."
+    save_next_crawling_time()
+
+def save_next_crawling_time():
+    """save next crawling time"""
+    form = json.loads(read_form())
+    now = datetime.datetime.now()
+    if now.minute < 55:
+        plus = 55 - now.minute
+    else:
+        plus = 60 - (now.minute - 55)
+    next_run_time = now + datetime.timedelta(minutes=plus)
+    form['next_run_time'] = next_run_time.strftime("%Y/%m/%d %H:%M")
+    save_form(json.dumps(form))
+
 
 def goToMachines(gh, hallcode):
     res = 0

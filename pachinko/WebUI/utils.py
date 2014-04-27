@@ -2,13 +2,22 @@
 utils module
 """
 import json
+from subprocess import call
 
-def stop_crawling():
+def stop_cron():
     """
     stop cron job
     """
-    pass
+    call(['crontab', '-r'])
+    print "crontab -r"
 
+def start_cron():
+    """
+    start cron
+    """
+    call(['crontab', 'pachinko.cron'])
+    print "crontab pachinko.cron"
+    
 def save_form(form_string):
     """save set crawler form data"""
     with open('crawler_last_setting.json', 'w+') as fi:
@@ -31,5 +40,6 @@ def clean_form():
     form['sigal'] = "STOP"
     form['target_hall'] = ''
     form['target_machine_types'] = ''
+    form['next_run_time'] = ''
     with open('crawler_last_setting.json', 'w+') as fi: 
         fi.write(json.dumps(form))
