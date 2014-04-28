@@ -3,7 +3,7 @@ utils module
 """
 import json
 from subprocess import call
-
+from connectMongoCrawler import DBCrawlerConnection
 def stop_cron():
     """
     stop cron job
@@ -34,12 +34,13 @@ def clean_form():
     """
     reset form data 
     """
+    last_crawl = DBCrawlerConnection().getLatestCrawlerDetails()[0]
     form = {}
-    form['username'] = ''
-    form['password'] = ''
-    form['sigal'] = "STOP"
-    form['target_hall'] = ''
-    form['target_machine_types'] = ''
+    form['username'] = last_crawl['username']
+    form['password'] = last_crawl['password']
+    form['signal'] = "STOP"
+    form['target_hallcode'] = last_crawl['targetHallocde']
+    form['target_machine_types'] = last_crawl['targetmachinetype']
     form['next_run_time'] = ''
     with open('crawler_last_setting.json', 'w+') as fi: 
         fi.write(json.dumps(form))

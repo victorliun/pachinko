@@ -142,7 +142,7 @@ def getData(gh, hallcode, machine_range):
         key["machine"] = machine
         key["date"] = today_date
         key["time_of_win"] = cells[1].strip()
-    #   print res
+        print "siving ", res
 
         con["pachinko_data2"]["data"].update(key, res, upsert=True)        
         #save hallcode, machine_type, machine if one is new
@@ -161,7 +161,11 @@ def sign_in(gh, account_id, account_ps):
     """
     Check yahoo account name and password if it is correct
     """
-    page, resources = gh.open("http://fe.site777.tv/data/yahoo/login.php")
+    try:
+        page, resources = gh.open("http://fe.site777.tv/data/yahoo/login.php")
+    except Exception, terr:
+        logging.error(terr)
+        return
     print page.url 
     gh.wait_for_selector('input[name=login]')
     result, resources = gh.set_field_value("input[name=login]", account_id) #"gopachipro")

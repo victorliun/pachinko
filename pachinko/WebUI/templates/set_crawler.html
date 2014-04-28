@@ -9,11 +9,11 @@
 {%block page_header%}Setting the Crawler{%endblock%}
 
 {%block content%}
-<form action="" method="post" name="crawler_settings">
+<form action="" method="post" name="crawler_settings" autocomplete="off">
     <div id="username_input">
         <label>A. Yahoo! Login: </label>
-        <input type="text" name="username" placeholder="username" autocomplete="off" value='{{form.username}}'>        
-        <input type="password" name="password" placeholder="password" autocomplete="off" value='{{form.password}}'>  
+        <input type="text" name="username" placeholder="username" value='{{form.username}}'>        
+        <input type="password" name="password" placeholder="password" value='{{form.password}}'>  
         <span id="yahoo_helper" class="helper">Invalid yahoo account.</span>
     </div>
     <div id="target_hall_input">
@@ -29,7 +29,7 @@
     <input type='hidden' name='signal' value="{{form.signal}}">
     <div id="submit"><input type="button" value="START"></div>
 </form>
-<div id='log'>
+<div id='log' {%if form.signal == 'STOP'%} style='display:none;' {%endif%}>
     Next crawling time: <span id='next_run_time'>{{form.next_run_time}}<span>
 </div>
 {%endblock%}

@@ -157,7 +157,7 @@ def set_crawler():
         form_dict['next_run_time'] = get_next_run_time()
         if signal == "START":
             logging.warning("start crawling:")
-            target_machine_types = filter(lambda x: x,target_machine_types.split(','))  
+            #target_machine_types = filter(lambda x: x,target_machine_types.split(','))  
             dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
             save_form(json.dumps(form_dict))
             start_cron()

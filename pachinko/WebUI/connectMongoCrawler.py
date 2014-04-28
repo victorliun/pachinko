@@ -33,5 +33,5 @@ class DBCrawlerConnection:
             "password": password, 
             "targetHallocde": targetHallocde, 
             "targetmachinetype": targetmachinetype,
-            "time": long(time.time()*1000})
+            "time": long(time.time()*1000)})
 

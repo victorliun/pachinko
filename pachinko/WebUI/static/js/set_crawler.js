@@ -17,6 +17,7 @@ var SetCrawler = {
             dataType:'json',
             success:function(data){
                 $('#log span').html('');
+		$('#log').hide();
             }
         });
 
@@ -32,6 +33,7 @@ var SetCrawler = {
             dataType:'json',
             success:function(data){   
                 $('#log span').html(data.next_run_time);
+                $('#log').show();
             }
         });
 
@@ -125,7 +127,7 @@ $(document).ready(function(){
             }
             SetCrawler.enableMachineTypesAutocomplete(this.value);
         }
-    });
+	});
     $("input[name='target_machine_types']").blur(function(){
         if (this.value.match(/^\d{6}(,\s*\d{6})*(,\s)?$/) != null){
             $("#machine_type_helper").hide();
