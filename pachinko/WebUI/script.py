@@ -162,6 +162,7 @@ def set_crawler():
             save_form(json.dumps(form_dict))
             start_cron()
             res['status'] = "Start crawling"
+            res['next_run_time'] = form_dict['next_run_time']
             th = threading.Thread(target=start_crawling, args = (target_hallcode, target_machine_types, username, password))
             th.daemon = True
             th.start()
@@ -170,6 +171,7 @@ def set_crawler():
             clean_form()
             stop_cron()
             res['status'] = "Stop crawling"
+            res['next_run_time'] = ''
         return json.dumps(res)
 
 @app.route('/update')
