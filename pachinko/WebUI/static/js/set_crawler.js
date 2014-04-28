@@ -16,7 +16,7 @@ var SetCrawler = {
             data: $("form").serialize(),
             dataType:'json',
             success:function(data){
-                
+                $('#log span').html('');
             }
         });
 
@@ -96,6 +96,10 @@ var SetCrawler = {
 $(document).ready(function(){
     // validate and submit form
     $("input[type='button']").click(function(){
+        if( $(this).val() === 'STOP' ){
+            SetCrawler.crawler_stop(this);
+            return;
+        }
         var text = $("input");
         for(var i=0;i<text.length;i++){
             if (text[i].type != 'hidden' && !text[i].value){
@@ -111,10 +115,6 @@ $(document).ready(function(){
         if( $(this).val() === 'START' ){
             SetCrawler.crawler_start(this);
             return;   
-        }
-        if( $(this).val() === 'STOP' ){
-            SetCrawler.crawler_stop(this);
-            return;
         }
     });
 
