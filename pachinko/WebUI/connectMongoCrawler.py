@@ -32,5 +32,6 @@ class DBCrawlerConnection:
         return collection.insert({"username": username, 
             "password": password, 
             "targetHallocde": targetHallocde, 
-            "targetmachinetype": targetmachinetype})
+            "targetmachinetype": targetmachinetype,
+            "time": long(time.time()*1000})
 
