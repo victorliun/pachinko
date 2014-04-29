@@ -3,7 +3,7 @@ from __future__ import  absolute_import
 from flask import Flask, g, session, redirect, \
         url_for, escape, request, render_template,\
         make_response, request, current_app
-import os
+import os, signal
 import logging
 from functools import update_wrapper
 from datetime import timedelta
@@ -19,6 +19,7 @@ from scrape_data import start_crawling
 import urllib
 from datetime import datetime
 import threading
+from multiprocessing import Process
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -146,16 +147,16 @@ def set_crawler():
         password = request.form['password']
         target_hallcode = request.form['target_hallcode']
         target_machine_types = request.form['target_machine_types']
-        signal = request.form['signal']
+        switch = request.form['signal']
         res = {}
         form_dict = {}
         form_dict['username'] = username
         form_dict['password'] = password
         form_dict['target_hallcode'] = target_hallcode
         form_dict['target_machine_types'] = target_machine_types
-        form_dict['signal'] = signal
+        form_dict['signal'] = switch
         form_dict['next_run_time'] = get_next_run_time()
-        if signal == "START":
+        if switch == "START":
             logging.warning("start crawling:")
             #target_machine_types = filter(lambda x: x,target_machine_types.split(','))  
             dbConn1.save_crawler_data(username, password, target_hallcode, target_machine_types)
@@ -163,12 +164,22 @@ def set_crawler():
             start_cron()
             res['status'] = "Start crawling"
             res['next_run_time'] = form_dict['next_run_time']
-            th = threading.Thread(target=start_crawling, args = (target_hallcode, target_machine_types, username, password))
-            th.daemon = True
+            th = Process(target=start_crawling, args = (target_hallcode, target_machine_types, username, password))
             th.start()
-        elif signal == "STOP":
+            with open("scrape.pid", 'w+') as fi:
+                print "start process:", th.pid
+                fi.write(str(th.pid))
+        elif switch == "STOP":
             logging.warning("stop crawling")
             clean_form()
+            with open("scrape.pid", 'r') as fo:
+                pid = fo.read()
+                print "kill pid", pid
+                if pid:
+                    try:
+                        os.kill(int(pid), signal.SIGKILL)
+                    except Exception, err:
+                        logging.warning(err)
             stop_cron()
             res['status'] = "Stop crawling"
             res['next_run_time'] = ''
