@@ -27,8 +27,14 @@ $(document).ready(function () {
                     else if ($("#by_hall").text() != "None"  && $("#by_machine_type").text() == "None")
                         show_machine_types_from_hallcode();
 			        updateTable(this,"tabledata");
+                    $.cookie("from_date", this.value);
                 }
-            }).val(getDateFormat(oneYr));
+            });
+
+            if($.cookie("from_date"))
+                $( "#from-datepicker" ).datepicker('setDate', $.cookie('from_date'));
+            else
+                $( "#from-datepicker" ).datepicker('setDate', getDateFormat(oneYr));
 
 
             $( "#to-datepicker" ).datepicker({
@@ -41,37 +47,53 @@ $(document).ready(function () {
                     else if ($("#by_hall").text() != "None"  && $("#by_machine_type").text() == "None")
                         show_machine_types_from_hallcode();
 			        updateTable(this, "tabledata");
+
+                    $.cookie("to_date", this.value);
                 }
-            }).val(getDateFormat(now));
+            });
+
+            if($.cookie("to_date"))
+                $( "#to-datepicker" ).datepicker('setDate', $.cookie('to_date'));
+            else
+                $( "#to-datepicker" ).datepicker('setDate', getDateFormat(oneYr));
+
 
           } );
 
 	function updateTable(el, nextName) {
-                                var options
-                                var txtStrng = '';
-				hallcode = $("#hallcode li.selected").text();
-   				machinetype = $("#machinetype li.selected").text();
-		   		machinenumber = $("#machinenumber li.selected").text();
-				startDate = $("#from-datepicker").val();
-				endDate =  $("#to-datepicker").val();
-                                var full_url = "/Data?startDate=" + startDate + "&endDate=" + endDate + "&hallcode=" + hallcode + "&machinetype=" + machinetype +"&machinenumber=" + machinenumber;
+            var options;
+            var txtStrng = '';
+    		hallcode = $("#hallcode li.selected").text();
+            if (hallcode == "None")
+                hallcode = ''
+    		machinetype = $("#machinetype li.selected").text();
+       		machinenumber = $("#machinenumber li.selected").text();
+    		startDate = $("#from-datepicker").val();
+    		endDate =  $("#to-datepicker").val();
+            var full_url = "/Data?startDate=" + startDate + "&endDate=" + endDate + "&hallcode=" + hallcode + "&machinetype=" + machinetype +"&machinenumber=" + machinenumber;
 
-				//grab ajax data
-                        	$.ajax({
-					async: false,
-					url: full_url,
-					dataType: 'json',
-					success: function(data, textStatus, jqXHR)
-					{
-						 //data - response from server
-						options= data;
-					},
-					error: function (jqXHR, textStatus, errorThrown)
-					{
-						alert(textStatus)
-						alert(jqXHR)
-					}
-				});
+            if(hallcode && machinetype && machinenumber =="None"){
+                $("div#hall_table").hide();
+                $("div#tables").hide();
+                $("div#machine_type_table").show();
+                return;
+            }
+            //grab ajax data
+            $.ajax({
+                async: false,
+                url: full_url,
+                dataType: 'json',
+                success: function(data, textStatus, jqXHR)
+                {
+                    //data - response from server
+                    options= data;
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    alert(textStatus)
+                    alert(jqXHR)
+                }
+            });
                                  //create the option list
 			var renchan_series = 0;
 			var total_spins = 0;

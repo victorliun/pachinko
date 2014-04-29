@@ -116,8 +116,10 @@ $(document).ready(function(){
         $("#machinenumber li.selected").removeClass("selected");
         $(this).addClass("selected");
         updateTable(this, 'tabledata');
-        $("div#machine_type_table").hide();
-        $("div#tables").show()
+        if(this.textContent != "None"){
+            $("div#machine_type_table").hide();
+            $("div#tables").show()
+        }
         $("a#by_machine").focus();
     });
     $("a#by_machine").keydown(function(event){

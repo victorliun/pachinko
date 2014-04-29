@@ -5,9 +5,13 @@ $(document).ready(function(){
         // setDate: new Date(),
         onSelect: function (date) {
             generateChartsOnDropDownChange();
+            $.cookie('from_date',this.value);
         }
-    }).val(getDateFormat(oneYr));
-
+    });
+    if($.cookie("from_date"))
+        $( "#from-datepicker" ).datepicker('setDate', $.cookie('from_date'));
+    else
+        $( "#from-datepicker" ).datepicker('setDate', getDateFormat(oneYr));
 
     $( "#to-datepicker" ).datepicker({
         altFormat: "yymmdd",
@@ -15,9 +19,13 @@ $(document).ready(function(){
         // setDate: new Date(),
         onSelect: function (date) {
             show_machine_types_from_hallcode();
+            $.cookie('to_date',this.value);
         }
-    }).val(getDateFormat(now));
-
+    });
+    if($.cookie("to_date"))
+        $( "#to-datepicker" ).datepicker('setDate', $.cookie('to_date'));
+    else
+        $( "#to-datepicker" ).datepicker('setDate', getDateFormat(oneYr));
     updateNext('hallcode','hallcode');
 
     $("a#by_hall").parent().hover(function(){
