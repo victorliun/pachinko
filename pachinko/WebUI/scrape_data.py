@@ -253,7 +253,7 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
         } """
         print js
         result, resources = gh.evaluate(js, expect_loading=True)
-        print "###result," result.url
+        print "###result,", result.url
 
         goToMachines(gh, hallcode)
         button_index += 1
@@ -313,7 +313,7 @@ def goToMachines(gh, hallcode):
                     print "executing:", js_link
                     result, resources = gh.evaluate(js_link, expect_loading=True)
                     getData(gh, hallcode, machine_range)
-                    print "#####machine_range," machine_range
+                    print "#####machine_range,", machine_range
                     js = """
                     history.go(-1);
                     """
