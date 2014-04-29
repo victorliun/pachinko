@@ -93,7 +93,7 @@ def getData(gh, hallcode, machine_range):
     for r in rows:
         if i == 0:
             i = 1
-        continue
+            continue
         res = {}
         res["timestamp"] = datetime.now()
         res["hallcode"] = hallcode
@@ -253,6 +253,7 @@ def start_crawling(hallcode=hall_code, machine_types=machine_type,
         } """
         print js
         result, resources = gh.evaluate(js, expect_loading=True)
+        print "###result," result.url
 
         goToMachines(gh, hallcode)
         button_index += 1
@@ -292,7 +293,10 @@ def goToMachines(gh, hallcode):
 
         for tr in s:
             hxs3 = HtmlXPathSelector(text=tr)
+            print "####TR", tr
             js_link = hxs3.select('//span[@class="his"]/a/@href').extract()
+
+            print "####machine ", hxs3.select('//span[@class="num"]/text()').extract()
             if len(js_link) > 0:
                 machine_range = hxs3.select('//td[5]/text()').extract()
                 js_link = js_link[0]
@@ -309,6 +313,7 @@ def goToMachines(gh, hallcode):
                     print "executing:", js_link
                     result, resources = gh.evaluate(js_link, expect_loading=True)
                     getData(gh, hallcode, machine_range)
+                    print "#####machine_range," machine_range
                     js = """
                     history.go(-1);
                     """
