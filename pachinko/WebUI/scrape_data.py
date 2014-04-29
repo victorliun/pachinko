@@ -163,31 +163,31 @@ def sign_in(gh, account_id, account_ps):
     """
     try:
         page, resources = gh.open("http://fe.site777.tv/data/yahoo/login.php")
+        print page.url 
+        gh.wait_for_selector('input[name=login]')
+        result, resources = gh.set_field_value("input[name=login]", account_id) #"gopachipro")
+        result, resources = gh.set_field_value("input[name=passwd]", account_ps) #"pachi.pro.2014")
+        result, resources = gh.click(".btnLogin", expect_loading=True)
+        print 2
+        time.sleep(2)
+    
+        result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
+        time.sleep(3)
+        print 3
+        result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
+        time.sleep(4)
+        print 4
+        result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
+        print result.url
+        if 'yahoo' in str(result.url):
+            print "login failed."
+            return False,
+        else:
+            print "loged in!."
+            return True, result, resources
     except Exception, terr:
         logging.error(terr)
         return
-    print page.url 
-    gh.wait_for_selector('input[name=login]')
-    result, resources = gh.set_field_value("input[name=login]", account_id) #"gopachipro")
-    result, resources = gh.set_field_value("input[name=passwd]", account_ps) #"pachi.pro.2014")
-    result, resources = gh.click(".btnLogin", expect_loading=True)
-    print 2
-    time.sleep(2)
-
-    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
-    time.sleep(3)
-    print 3
-    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
-    time.sleep(4)
-    print 4
-    result, resources = gh.evaluate("document.forms[0].submit();", expect_loading=True)
-    print result.url
-    if 'yahoo' in str(result.url):
-        print "login failed."
-        return False,
-    else:
-        print "loged in!."
-        return True, result, resources
 
 def start_crawling(hallcode=hall_code, machine_types=machine_type,
          account_id=username, account_ps=password):
@@ -293,7 +293,6 @@ def goToMachines(gh, hallcode):
 
         for tr in s:
             hxs3 = HtmlXPathSelector(text=tr)
-            print "####TR", tr
             js_link = hxs3.select('//span[@class="his"]/a/@href').extract()
 
             print "####machine ", hxs3.select('//span[@class="num"]/text()').extract()
