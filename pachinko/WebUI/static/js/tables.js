@@ -34,7 +34,7 @@ $(document).ready(function () {
             if($.cookie("from_date"))
                 $( "#from-datepicker" ).datepicker('setDate', $.cookie('from_date'));
             else
-                $( "#from-datepicker" ).datepicker('setDate', getDateFormat(oneYr));
+                $( "#from-datepicker" ).datepicker('setDate', getDateFormat(now));
 
 
             $( "#to-datepicker" ).datepicker({
@@ -55,7 +55,7 @@ $(document).ready(function () {
             if($.cookie("to_date"))
                 $( "#to-datepicker" ).datepicker('setDate', $.cookie('to_date'));
             else
-                $( "#to-datepicker" ).datepicker('setDate', getDateFormat(oneYr));
+                $( "#to-datepicker" ).datepicker('setDate', getDateFormat(now));
 
 
           } );
