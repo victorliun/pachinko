@@ -142,7 +142,7 @@ def getData(gh, hallcode, machine_range):
         key["machine"] = machine
         key["date"] = today_date
         key["time_of_win"] = cells[1].strip()
-        print "siving ", res
+        print "saving ", res
 
         con["pachinko_data2"]["data"].update(key, res, upsert=True)        
         #save hallcode, machine_type, machine if one is new
