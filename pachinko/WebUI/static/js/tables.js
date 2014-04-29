@@ -122,7 +122,7 @@ $(document).ready(function () {
                                 txtStrng += "<td>"+obj.win_number + "</td>" ;
                                 txtStrng += "<td>"+obj.time_of_win + "</td>" ;
                                 txtStrng += "<td>"+obj.spin_count_of_win + "</td>" ;
-                if (!obj.total_balls_out)
+                if (!!obj.total_balls_out)
                     txtStrng += "<td>"+obj.total_balls_out + "</td>" ;
                 else
                     txtStrng += "<td> -- </td>" ;

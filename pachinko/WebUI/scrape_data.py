@@ -293,7 +293,6 @@ def goToMachines(gh, hallcode):
 
         for tr in s:
             hxs3 = HtmlXPathSelector(text=tr)
-            print "####TR", tr
             js_link = hxs3.select('//span[@class="his"]/a/@href').extract()
 
             print "####machine ", hxs3.select('//span[@class="num"]/text()').extract()
