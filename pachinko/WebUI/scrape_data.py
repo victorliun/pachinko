@@ -145,7 +145,7 @@ def getData(gh, hallcode, machine_range):
         key["time_of_win"] = cells[1].strip()
         print "saving ", res
 
-        one_record = con['pachinko_data2']['data'].findOne(key)
+        one_record = con['pachinko_data2']['data'].find_one(key)
         if not one_record:
             records_of_the_date = con['pachinko_data2']['data'].find({
                 "hallcode":hallcode,
