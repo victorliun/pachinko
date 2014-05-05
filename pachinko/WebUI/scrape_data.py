@@ -140,11 +140,23 @@ def getData(gh, hallcode, machine_range):
         key = {}
         key["hallcode"] = hallcode
         key["machine"] = machine
+        key['machine_type'] = machine_type
         key["date"] = today_date
         key["time_of_win"] = cells[1].strip()
         print "saving ", res
 
-        con["pachinko_data2"]["data"].update(key, res, upsert=True)        
+        one_record = con['pachinko_data2']['data'].find_one(key)
+        if not one_record:
+            records_of_the_date = con['pachinko_data2']['data'].find({
+                "hallcode":hallcode,
+                "machine":machine,
+                "machine_type":machine_type,
+                "date":today_date,
+                })
+            highest_range = get_highest_range(records_of_the_date)
+            if machine_range < highest_range:
+                res['machine_range'] = highest_range
+            con["pachinko_data2"]["data"].update(key, res, upsert=True)
         #save hallcode, machine_type, machine if one is new
         mdb = DBConnection()
         if not mdb.machine_details.find({'hallcode':hallcode}):
@@ -156,7 +168,24 @@ def getData(gh, hallcode, machine_range):
     dump["series"] = jackpots
     con["pachinko_dump2"]["data"].insert(dump)
 
+def get_highest_range(records):
+    """
+    This function exist because the range in db is stored as string, unbelievable.
+    So have to write an function to get highest string range
+    """
 
+    highest_range = 0
+    for record in records:
+        this_range = record.get('machine_range', 0)
+        try:
+            this_range = int(this_range)
+        except ValueError, ver:
+            this_range = 0
+        if this_range > highest_range:
+            highest_range = this_range
+    return highest_range
+
+    
 def sign_in(gh, account_id, account_ps):
     """
     Check yahoo account name and password if it is correct
