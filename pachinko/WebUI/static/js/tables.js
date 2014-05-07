@@ -121,11 +121,16 @@ function updateTable(el, nextName) {
       closing_spins[obj.date] = obj.spin_count_of_win;
     if(obj.renchan == 0)
       single_wins.push(obj.spin_count_of_win);
+    
+    var time_of_win = obj.time_of_win;
+    if (time_of_win == "NaN")
+      time_of_win = "--";
+    
     txtStrng += "<tr>";
     txtStrng += "<td>"+obj.date + "</td>" ;
     txtStrng += "<td>"+obj.renchan + "</td>" ;
     txtStrng += "<td>"+obj.win_number + "</td>" ;
-    txtStrng += "<td>"+obj.time_of_win + "</td>" ;
+    txtStrng += "<td>"+time_of_win + "</td>" ;
     txtStrng += "<td>"+obj.spin_count_of_win + "</td>" ;
     if (!!obj.total_balls_out)
       txtStrng += "<td>"+obj.total_balls_out + "</td>" ;

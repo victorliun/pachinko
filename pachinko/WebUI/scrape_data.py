@@ -23,7 +23,14 @@ meta_data = {}
 for md in meta_data_l:
     meta_data = md
 
-today_date = time.strftime("%Y-%m-%d")
+
+# if the time of current day is before than 6:00pm then the data is still
+# belongs yesterday. So make it to yesterday, if time is between 0:00am ~ 6:00am
+now = datetime.now()
+six_clock = now.replace(hour=6,minute=0,second=0)
+if now < six_clock:
+    now = now - timedelta(days=1)
+today_date = now.strftime("%Y-%m-%d")
 
 hall_code = meta_data["targetHallocde"]
 machine_type = meta_data["targetmachinetype"].split(",")
@@ -118,7 +125,10 @@ def getData(gh, hallcode, machine_range):
             res["column5"] = cells[4].strip()
         except:
             pass
-        res["time_of_win"] = cells[1].strip()
+        time_of_win = cells[1].strip()
+        if time_of_win == "--":
+            time_of_win = "NaN"
+        res["time_of_win"] = time_of_win
         res["spin_count_of_win"] = cells[2].strip()
         try:
             res["spin_count_of_win"] = int(cells[2].strip())
@@ -142,7 +152,7 @@ def getData(gh, hallcode, machine_range):
         key["machine"] = machine
         key['machine_type'] = machine_type
         key["date"] = today_date
-        key["time_of_win"] = cells[1].strip()
+        key["time_of_win"] = time_of_win
         print "saving ", res
 
         one_record = con['pachinko_data2']['data'].find_one(key)
