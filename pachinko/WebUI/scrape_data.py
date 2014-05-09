@@ -120,7 +120,7 @@ def getData(gh, hallcode, machine_range):
         try:
             res["win_number"] = int(res["win_number"].replace("*", "").strip())
         except:
-            pass
+            res["win_number"] = 0
         try:
             res["column5"] = cells[4].strip()
         except:
@@ -133,15 +133,12 @@ def getData(gh, hallcode, machine_range):
         try:
             res["spin_count_of_win"] = int(cells[2].strip())
         except:
-            pass
+            res["spin_count_of_win"] = 0
 
         try:
             res["total_balls_out"] = int(cells[3].strip())
         except:
-            try:
-                res["total_balls_out"] = cells[3].strip()
-            except:
-                pass
+            res["total_balls_out"] = 0
 
         for c in cells:
             jr.append(c.strip())
@@ -166,6 +163,8 @@ def getData(gh, hallcode, machine_range):
             highest_range = get_highest_range(records_of_the_date)
             if machine_range < highest_range:
                 res['machine_range'] = highest_range
+            con["pachinko_data2"]["data"].update(key, res, upsert=True)
+        elif time_of_win == 'NaN':
             con["pachinko_data2"]["data"].update(key, res, upsert=True)
         #save hallcode, machine_type, machine if one is new
         mdb = DBConnection()
