@@ -115,7 +115,9 @@ function updateTable(el, nextName) {
     last_renchan = obj.renchan;
 
     total_spins += parseInt(obj.spin_count_of_win);
-    if(obj.win_number != "--")
+
+    var win_number = obj.win_number
+    if(win_number != "--" && win_number != 0)
       total_wins += 1;
     else
       closing_spins[obj.date] = obj.spin_count_of_win;
@@ -126,10 +128,12 @@ function updateTable(el, nextName) {
     if (time_of_win == "NaN")
       time_of_win = "--";
     
+    if (win_number == 0)
+      win_number = '--'
     txtStrng += "<tr>";
     txtStrng += "<td>"+obj.date + "</td>" ;
     txtStrng += "<td>"+obj.renchan + "</td>" ;
-    txtStrng += "<td>"+obj.win_number + "</td>" ;
+    txtStrng += "<td>"+win_number + "</td>" ;
     txtStrng += "<td>"+time_of_win + "</td>" ;
     txtStrng += "<td>"+obj.spin_count_of_win + "</td>" ;
     if (!!obj.total_balls_out)
