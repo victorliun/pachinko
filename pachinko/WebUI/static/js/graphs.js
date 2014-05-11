@@ -129,11 +129,11 @@ $(document).ready(function(){
         $("#machinenumber").hide();
     });
     $("ul#machinenumber").on("click","li", function(){
-        $("a#by_machine").html(this.textContent);
-        $("#machinenumber").hide();
         $("#machinenumber li.selected").removeClass("selected");
         $(this).addClass("selected");
         //TODO
+        $("#machinenumber").hide();
+        $("a#by_machine").html(this.textContent);
         $("a#by_machine").focus();
     });
     $("a#by_machine").keydown(function(event){

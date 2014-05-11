@@ -116,17 +116,17 @@ function updateTable(el, nextName) {
 
     total_spins += parseInt(obj.spin_count_of_win);
 
-    var win_number = obj.win_number
-    if(win_number != "--" && win_number != 0)
-      total_wins += 1;
-    else
-      closing_spins[obj.date] = obj.spin_count_of_win;
-    if(obj.renchan == 0)
-      single_wins.push(obj.spin_count_of_win);
-    
     var time_of_win = obj.time_of_win;
     if (time_of_win == "NaN")
       time_of_win = "--";
+    
+    var win_number = obj.win_number
+    if(win_number != "--" && win_number != 0)
+      total_wins += 1;
+    else if (win_number == '--' && time_of_win == '--')
+      closing_spins[obj.date] = obj.spin_count_of_win;
+    if(obj.renchan == 0)
+      single_wins.push(obj.spin_count_of_win);
     
     if (win_number == 0)
       win_number = '--'
