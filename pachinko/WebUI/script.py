@@ -221,20 +221,18 @@ def getSpinCount(data):
             pass
 
         if len(post["time_of_win"]) > 3:
-            if post["win_number"] != "--" and c_max[dt] < post["win_number"]:
+            if post["win_number"] != 0 and c_max[dt] < post["win_number"]:
                 c_max[dt] = post["win_number"]
-            if post["time_of_win"] != "--" and c_max_time[dt] < post["time_of_win"]:
+            if post["time_of_win"] != "NaN" and c_max_time[dt] < post["time_of_win"]:
                 c_max_time[dt] = post["time_of_win"]
-        if post["time_of_win"] == "--" and post["win_number"] == "--":
+        if post["time_of_win"] == "NaN" and post["win_number"] == 0:
             c_max_time_win[dt] = post["spin_count_of_win"]
-        if post["renchan"] == 0 and post["win_number"] != "--":
+        if post["renchan"] == 0 and post["win_number"] != 0:
             renchan_wins[dt].append({"time":post["time_of_win"], "spin": post["spin_count_of_win"]})
         if post["renchan"] > 0:
             renchan_count[dt] += post["renchan"]
-        if post["win_number"] > totalwins[dt] and totalwins[dt] != -1:
-            totalwins[dt] = post["win_number"]
-        if post["win_number"] == "--":
-            totalwins[dt] = 0
+        if post["win_number"] != 0:
+            totalwins[dt] += 1
             
     for c in sorted(c_cnt.keys()):
         r = {}
@@ -245,10 +243,7 @@ def getSpinCount(data):
         r["closingspincount"] = c_max_time_win.get(c, '')
         r["singlewinsspincount"] = renchan_wins.get(c, '')
         r["renchan"] = renchan_count.get(c, '')
-        if totalwins[dt] == -1:
-            r["totalwins"] = 0
-        else:
-            r["totalwins"] = totalwins[c]
+        r["totalwins"] = totalwins[c]
 
         ret.append(r)
     return ret
@@ -498,3 +493,4 @@ def getPreviuosData():
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
+
