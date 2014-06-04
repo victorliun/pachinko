@@ -90,7 +90,11 @@ def update_cash_payout(group):
                 item['cash_result'] = total_cashout + item['cashout']
         elif index != len(group) - 1: # not the last one
             if item['renchan'] == 0:
-                spin_balls = ( spin - FREE_SPINS ) * BALL_SPIN_COST
+                if spin < FREE_SPINS:
+                    spin_balls = 0 #all free spin
+                else:
+                    spin_balls = ( spin - FREE_SPINS ) * BALL_SPIN_COST
+                
                 ball_cost = spin_balls + group[index-1]['balls_won']
                 if ball_cost > 0:
                     item['balls_won'] = BALL_JACKPOT + ball_cost
@@ -110,7 +114,7 @@ def update_cash_payout(group):
                 item['cashout'] = int(round(item['balls_won'] *  BALL_CASHOUT))
                 item['cash_result'] = item['cashout'] + total_cashout
         #finish
-        if item['time_of_win'] == 'NaN' and item['win_number'] == '--':
+        if item['time_of_win'] in ('--', 'NaN') and item['win_number'] in ('--',0):
             ## stop calculate
             item['balls'] = ( spin - FREE_SPINS ) * BALL_SPIN_COST
             item['cash'] = int(round(( spin - FREE_SPINS ) / SPIN_AVERAGE))
