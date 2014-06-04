@@ -120,7 +120,9 @@ def update_cash_payout(group):
                 item['balls'] = ( spin - FREE_SPINS ) * BALL_SPIN_COST
                 item['cash'] = int(round(( spin - FREE_SPINS ) / SPIN_AVERAGE))
                 item['cash_result'] = total_cashout + item['cash']
-
+            else:
+                #without a win
+                item['cash_result'] = item['cash']
             item['cashout'] = 0
             item['balls_won'] = 0
         result.append(item)
