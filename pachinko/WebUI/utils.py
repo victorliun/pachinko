@@ -123,6 +123,7 @@ def update_cash_payout(group):
             else:
                 #without a win
                 item['cash_result'] = item['cash']
+                item['balls'] = int(round(item['cash'] / 1000.0 * 250 ))
             item['cashout'] = 0
             item['balls_won'] = 0
         result.append(item)
