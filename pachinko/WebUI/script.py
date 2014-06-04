@@ -304,8 +304,12 @@ def getData():
             rec["value"] = s["totalwins"]
             lst.append(rec)
     else:
+        #CASE: Analysis page
         for post in posts:
             lst.append(post)
+        if machinenumber and machinetype and hallcode:
+            lst = add_cash_payout(lst)
+
     #return json.dumps(lst, cls=Encoder)
     return json.dumps(lst, default=json_util.default)
 
@@ -362,12 +366,13 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
                 try:
                     ranges.append(int(cl['machine_range']))
                 except ValueError, err:
-                    logging.warning( "Range:%s is not a integer." %cl['machine_range'])
+                    pass
+                    #logging.info( "Range:%s is not a integer." %cl['machine_range'])
             elif cl.has_key('range'):
                 try:
                     ranges.append(int(cl['range']))
                 except ValueError, err:
-                    logging.warning( "Range:%s is not a integer." %cl['range'])
+                    logging.info( "Range:%s is not a integer." %cl['range'])
         if ranges:
             resp['range'] = int(round(reduce(lambda x,y: x+y, ranges)/len(ranges)))
         else:

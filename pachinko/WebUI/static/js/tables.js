@@ -76,6 +76,13 @@ function updateTable(el, nextName) {
     $("div#machine_type_table").show();
     return;
   }
+  if(hallcode && machinetype && machinenumber && $('table#tabledata thead tr:first th').length < 12 ){
+    $("table#tabledata thead tr:first th:nth-child(5)").after("<th>Cash+/- </th> \
+            <th>Balls+/- </th> \
+            <th>Balls Won to this point </th> \
+            <th>Cashout at this point </th> \
+            <th>Cash Result </th>");
+  }
   //grab ajax data
   $.ajax({
     async: false,
@@ -136,6 +143,13 @@ function updateTable(el, nextName) {
     txtStrng += "<td>"+win_number + "</td>" ;
     txtStrng += "<td>"+time_of_win + "</td>" ;
     txtStrng += "<td>"+obj.spin_count_of_win + "</td>" ;
+    if (typeof obj.cash !== 'undefined' ){
+      txtStrng += "<td>"+obj.cash + "</td>" ;
+      txtStrng += "<td>"+obj.balls + "</td>" ;
+      txtStrng += "<td>"+obj.balls_won + "</td>" ;
+      txtStrng += "<td>"+obj.cashout + "</td>" ;
+      txtStrng += "<td>"+obj.cash_result + "</td>" ;
+    }
     if (!!obj.total_balls_out)
       txtStrng += "<td>"+obj.total_balls_out + "</td>" ;
     else
