@@ -102,8 +102,8 @@ def update_cash_payout(group):
                     item['cash'] = group[index-1]['cash']
                 else:
                     item['balls_won'] = BALL_JACKPOT
-                    item['balls'] = spin_balls + group[index-1]['balls_won'] + item['balls_won'] 
-                    item['cash'] = int(round(( spin - FREE_SPINS ) / SPIN_AVERAGE))
+                    item['balls'] = ball_cost 
+                    item['cash'] = ball_cost * 4
                     total_cashout += item['cash']
                 item['cashout'] = int(round(item['balls_won'] * BALL_CASHOUT))
                 item['cash_result'] = item['cashout'] + total_cashout
@@ -117,7 +117,7 @@ def update_cash_payout(group):
         if item['time_of_win'] in ('--', 'NaN') and item['win_number'] in ('--',0):
             ## stop calculate
             if index!=0:
-                item['balls'] = ( spin - FREE_SPINS ) * BALL_SPIN_COST
+                item['balls'] = ( spin - FREE_SPINS ) * BALL_SPIN_COST + group[index-1]['balls']
                 item['cash'] = int(round(( spin - FREE_SPINS ) / SPIN_AVERAGE))
                 item['cash_result'] = total_cashout + item['cash']
             else:
