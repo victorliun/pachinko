@@ -1,0 +1,1 @@
+{ "indexes" : [ { "v" : 1, "key" : { "_id" : 1 }, "ns" : "pachinko_data2.data", "name" : "_id_" }, { "v" : 1, "key" : { "hallcode" : 1, "machine_type" : 1, "machine" : 1 }, "ns" : "pachinko_data2.data", "name" : "hallcode_1_machine_type_1_machine_1" }, { "v" : 1, "key" : { "date" : 1 }, "ns" : "pachinko_data2.data", "name" : "date_1" } ] }
