@@ -90,7 +90,7 @@ def update_cash_payout(group):
                 item['cash_result'] = total_cashout + item['cashout']
         elif index != len(group) - 1: # not the last one
             if item['renchan'] == 0:
-                if spin < FREE_SPINS:
+                if spin <= FREE_SPINS:
                     spin_balls = 0 #all free spin
                 else:
                     spin_balls = ( spin - FREE_SPINS ) * BALL_SPIN_COST
@@ -117,14 +117,30 @@ def update_cash_payout(group):
         if item['time_of_win'] in ('--', 'NaN') and item['win_number'] in ('--',0):
             ## stop calculate
             if index!=0:
-                item['balls'] = ( spin - FREE_SPINS ) * BALL_SPIN_COST + group[index-1]['balls']
-                item['cash'] = int(round(( spin - FREE_SPINS ) / SPIN_AVERAGE))
-                item['cash_result'] = total_cashout + item['cash']
+                if spin <= FREE_SPINS :
+                    spin_balls = 0
+                else:
+                    spin_balls = ( spin - FREE_SPINS ) * BALL_SPIN_COST 
+                
+                balls_left = spin_balls + group[index-1]['balls_won']
+
+                if balls_left > 0:
+                    item['balls'] = 0
+                    item['balls_won'] = balls_left
+                    item['cash'] = group[index-1]['cash']
+                    item['cashout'] = int(round(item['balls_won'] *  BALL_CASHOUT))
+                else:
+                    item['balls'] = balls_left
+                    item['cash'] = balls_left * 4
+                    item['balls_won'] = 0
+                    item['cashout'] = 0
+                    total_cashout += item['cash']
+                item['cash_result'] = total_cashout + item['cashout']
             else:
                 #without a win
                 item['cash_result'] = item['cash']
                 item['balls'] = int(round(item['cash'] / 1000.0 * 250 ))
-            item['cashout'] = 0
-            item['balls_won'] = 0
+                item['cashout'] = 0
+                item['balls_won'] = 0
         result.append(item)
     return result
