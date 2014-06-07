@@ -257,7 +257,10 @@ def getData():
     machinetype = request.args.get('machinetype', '')
     machinenumber = request.args.get('machinenumber', '')
     chartType = request.args.get('chart', '')
-    posts= dbConn.getData(startDate,endDate,hallcode,machinetype,machinenumber)
+    limit = 100
+    if hallcode or machinetype or machinenumber :
+        limit = 0
+    posts= dbConn.getData(startDate,endDate,hallcode,machinetype,machinenumber,limit)
     lst = []
     spincount = []
     if len(chartType) > 0:

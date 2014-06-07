@@ -14,7 +14,7 @@ class DBConnection:
         collection = self.db['data']
         return collection.distinct(column)
 
-    def getData(self,startDate, endDate, hallcode,machinetype,machinenumber):
+    def getData(self,startDate, endDate, hallcode,machinetype,machinenumber, limit=0):
         try:
             collection = self.db['data']
             if self.checkEmptyValue(hallcode):
@@ -27,7 +27,10 @@ class DBConnection:
                         query = {"$and": [{"date":{"$gte": startDate, "$lte": endDate}},{"hallcode": hallcode},{"machine_type":machinetype}]}
                     else:
                         query = {"$and": [{"date":{"$gte": startDate, "$lte": endDate}},{"hallcode": hallcode},{"machine_type": machinetype},{"machine": machinenumber}]}
-            return collection.find(query).sort([('date', 1),('time_of_win',1)])
+            if limit == 0:
+                return collection.find(query).sort([('date', 1),('time_of_win',1)])
+            else:
+                return collection.find(query).limit(limit).sort([('date', 1),('time_of_win',1)])
         except Exception as e:
             print e;
             pass
