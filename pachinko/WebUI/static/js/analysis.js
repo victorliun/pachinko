@@ -9,7 +9,7 @@ $(document).ready(function(){
        // $(this).find('#hallcode').slideToggle();
     });
 
-    $("ul#hallcode li").click(function(){
+    $("ul#hallcode").on('click', 'li', function(){
         $("a#by_hall").html(this.textContent);
         $("#hallcode").hide();
         $("#hallcode li.selected").removeClass("selected");

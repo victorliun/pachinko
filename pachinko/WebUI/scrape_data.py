@@ -168,11 +168,11 @@ def getData(gh, hallcode, machine_range):
             con["pachinko_data2"]["data"].update(key, res, upsert=True)
         #save hallcode, machine_type, machine if one is new
         mdb = DBConnection()
-        if not mdb.machine_details.find({'hallcode':hallcode}):
+        if not mdb.machine_details.find({'hallcode':hallcode}).count():
             mdb.insert_hallcode(hallcode)
         if not mdb.machine_details.find({'machine_type':machine_type, 'ancestors':[hallcode]}):
-            mdb.set_machine_type(hallcode, machine_type)
-        if not mdb.machine_details.find({'machine':machine, 'ancestors':[hallcode, machine_type]}):
+            mdb.insert_machine_type(hallcode, machine_type)
+        if not mdb.machine_details.find({'machine':machine, 'ancestors':[machine_type, hallcode]}).count():
             mdb.insert_machine(hallcode, machine_type, machine)
     dump["series"] = jackpots
     con["pachinko_dump2"]["data"].insert(dump)

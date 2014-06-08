@@ -83,26 +83,43 @@ class DBConnection:
 
         return self.client[db_name][collection_name]
 
-    def get_hallcodes(self):
+    def get_hallcodes(self, ignore=False, start_date="", end_date=""):
         """
         Return all hallcodes in the collection
+        if Ingore = true, check if any data within the time period
         """
-        hallcodes = self.machine_details.find({'ancestors':[]})
-        return [hallcode['hallcode'] for hallcode in hallcodes]
+        if ignore:
+            print start_date, end_date
+            return self.db['data'].find({'date':{'$gte':start_date, '$lte':end_date}}).distinct('hallcode')
+        else:
+            hallcodes = self.machine_details.find({'ancestors':[]})
+            return [hallcode['hallcode'] for hallcode in hallcodes]
 
-    def get_machine_types(self, hallcode):
+    def get_machine_types(self, hallcode, ignore=False, start_date="", end_date=""):
         """
         Return all machine types under the hall code.
+        if Ingore = true, check if any data within the time period
         """
-        machine_types = self.machine_details.find({'ancestors':[hallcode]})
-        return [mt['machine_type'] for mt in machine_types]
+        
+        if ignore:
+            return self.db['data'].find({'date':{'$gte':start_date, '$lte':end_date}, 
+                'hallcode':hallcode}).distinct('machine_type')
+        else:
+            machine_types = self.machine_details.find({'ancestors':[hallcode]})
+            return [mt['machine_type'] for mt in machine_types]
 
-    def get_machines(self, hallcode, machine_type):
+    def get_machines(self, hallcode, machine_type, ignore=False, start_date="", end_date=""):
         """
         Return all machine types under the hall code.
+        if Ingore = true, check if any data within the time period
         """
-        machines = self.machine_details.find({'ancestors':[machine_type, hallcode]})
-        return [machine['machine'] for machine in machines]
+        
+        if ignore:
+            return self.db['data'].find({'hallcode':hallcode, 
+                'date':{'$gte':start_date, '$lte':end_date}, 'machine_type': machine_type,}).distinct('machine')
+        else:
+            machines = self.machine_details.find({'ancestors':[machine_type, hallcode]})
+            return [machine['machine'] for machine in machines]
 
     def insert_hallcode(self, hallcode):
         """

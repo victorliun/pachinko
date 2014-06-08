@@ -332,7 +332,7 @@ def get_machine_type_details():
     if hallcode and machinetype:
         res = summary_machine_data(startDate,endDate,hallcode,machinetype)
     elif hallcode and not machinetype:
-        machine_types = dbConn.getMachineDetails("hallcode", hallcode, '','', "machine_type")
+        machine_types = dbConn.get_machine_types(hallcode, True, startDate, endDate)
         for mach_type in machine_types:
             machine_datas = summary_machine_data(startDate,endDate,hallcode,mach_type)
             machine_type_data = {}
@@ -357,7 +357,7 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
     This function will summary data from each machine.
     """
     res = []
-    machines = dbConn.getMachineDetails("hallcode", hallcode, "machine_type",machinetype, "machine")
+    machines = dbConn.get_machines(hallcode, machinetype, True, startDate, endDate)
     for machine in machines:
         cllc = dbConn.get_collections(startDate,endDate,hallcode,machinetype,machine)
         length = len(cllc)
@@ -370,11 +370,12 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
                     ranges.append(int(cl['machine_range']))
                 except ValueError, err:
                     pass
-                    #logging.info( "Range:%s is not a integer." %cl['machine_range'])
+                    logging.info( "Range:%s is not a integer." %cl['machine_range'])
             elif cl.has_key('range'):
                 try:
                     ranges.append(int(cl['range']))
                 except ValueError, err:
+                    pass
                     logging.info( "Range:%s is not a integer." %cl['range'])
         if ranges:
             resp['range'] = int(round(reduce(lambda x,y: x+y, ranges)/len(ranges)))
@@ -436,24 +437,26 @@ def check_yahoo_accout():
     return json.dumps(res)
 
 
-@app.route('/getHallcode/column=<column>')
+@app.route('/getHallcode')
 @crossdomain(origin='*')
-def getHallCode(column):
-    posts= dbConn.getHallCode(column)
-    lst = []
-    for post in posts:
-        lst.append(post)
+def getHallCode():
+    start_date = request.args.get('startDate', '')
+    end_date = request.args.get('endDate', '')
+    lst = dbConn.get_hallcodes(True, start_date, end_date)
     return json.dumps(lst, cls=Encoder)
 
 @app.route('/getMachineDetails')
 @crossdomain(origin='*')
 def getMachineDetails():
-    column = request.args.get('column', '')
-    value = request.args.get('value', '')
-    column2 = request.args.get('column2', '')
-    value2 = request.args.get('value2', '')
+    hallcode = request.args.get('hallcode', '')
+    start_date = request.args.get('startDate', '')
+    end_date = request.args.get('endDate', '')
     distinctcol = request.args.get('distinctcol', '')
-    posts= dbConn.getMachineDetails(column,value,column2,value2,distinctcol)
+    if distinctcol == 'machine_type':
+        posts= dbConn.get_machine_types(hallcode, True, start_date, end_date)
+    elif distinctcol == 'machine':
+        machine_type = request.args.get('machine_type', '')
+        posts= dbConn.get_machines(hallcode, machine_type, True, start_date, end_date)
     lst = []
     for post in posts:
         lst.append(post)

@@ -27,6 +27,7 @@ $(document).ready(function () {
       else if ($("#by_hall").text() != "None"  && $("#by_machine_type").text() == "None")
         show_machine_types_from_hallcode();
       updateTable(this,"tabledata");
+      updateNext('hallcode', 'hallcode');
       $.cookie("from_date", this.value);
     }
   });
@@ -47,7 +48,7 @@ $(document).ready(function () {
       else if ($("#by_hall").text() != "None"  && $("#by_machine_type").text() == "None")
         show_machine_types_from_hallcode();
       updateTable(this, "tabledata");
-
+      updateNext('hallcode', 'hallcode');
       $.cookie("to_date", this.value);
     }
   });

@@ -10,7 +10,7 @@ def run_extract():
     print "start Process"
     dbconnection = DBConnection()
 
-    machine_detail = dbconnection.get_collection('pachinko_data2','machine_details_test')
+    machine_detail = dbconnection.get_collection('pachinko_data2','machine_details')
     hallcodes = dbconnection.getHallCode('hallcode')
     #insert hallcode
     for hallcode in hallcodes:
