@@ -90,8 +90,8 @@ class DBConnection:
         if Ingore = true, check if any data within the time period
         """
         if ignore:
-            print start_date, end_date
-            return self.db['data'].find({'date':{'$gte':start_date, '$lte':end_date}}).distinct('hallcode')
+            hallcodes = self.db['data'].find({'date':{'$gte':start_date, '$lte':end_date}}).distinct('hallcode')
+            return sorted(hallcodes)
         else:
             hallcodes = self.machine_details.find({'ancestors':[]})
             return [hallcode['hallcode'] for hallcode in hallcodes]
@@ -103,8 +103,9 @@ class DBConnection:
         """
         
         if ignore:
-            return self.db['data'].find({'date':{'$gte':start_date, '$lte':end_date}, 
+            machine_types = self.db['data'].find({'date':{'$gte':start_date, '$lte':end_date}, 
                 'hallcode':hallcode}).distinct('machine_type')
+            return sorted(machine_types)
         else:
             machine_types = self.machine_details.find({'ancestors':[hallcode]})
             return [mt['machine_type'] for mt in machine_types]
@@ -116,8 +117,9 @@ class DBConnection:
         """
         
         if ignore:
-            return self.db['data'].find({'hallcode':hallcode, 
+            machines = self.db['data'].find({'hallcode':hallcode, 
                 'date':{'$gte':start_date, '$lte':end_date}, 'machine_type': machine_type,}).distinct('machine')
+            return sorted(machines)
         else:
             machines = self.machine_details.find({'ancestors':[machine_type, hallcode]})
             return [machine['machine'] for machine in machines]
