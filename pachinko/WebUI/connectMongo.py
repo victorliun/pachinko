@@ -3,12 +3,13 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import json
 import logging
+from settings import *
 
 class DBConnection:
     def __init__(self):
-        self.client = MongoClient('localhost', 27017)
-        self.db = self.client['pachinko_data2']
-        self.machine_details = self.get_collection("pachinko_data2", "machine_details")
+        self.client = MongoClient(MONGOHQ_URI)
+        self.db = self.client.pachinko_systems
+        self.machine_details = self.db.machine_details
 
     def getHallCode(self,column):
         collection = self.db['data']

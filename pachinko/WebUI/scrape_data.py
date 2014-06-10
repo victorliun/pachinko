@@ -7,7 +7,6 @@ import json
 from scrapy.selector import HtmlXPathSelector
 from functools import wraps
 from datetime import datetime, timedelta
-from pymongo import Connection
 from connectMongo import DBConnection 
 
 logger = logging.getLogger("ghost")
@@ -65,7 +64,8 @@ def getNextMachine(ghost):
     return result
 
 def getData(gh, hallcode, machine_range):
-    con = Connection()
+    mdb = DBConnection()
+    con = mdb.db
     content = unicode(gh.content)
     hxs = HtmlXPathSelector(text=unicode(gh.content))
     rows = hxs.select('//table//tr').extract()
@@ -152,9 +152,9 @@ def getData(gh, hallcode, machine_range):
         key["time_of_win"] = time_of_win
         print "saving ", res
 
-        one_record = con['pachinko_data2']['data'].find_one(key)
+        one_record = con['data'].find_one(key)
         if not one_record:
-            records_of_the_date = con['pachinko_data2']['data'].find({
+            records_of_the_date = con['data'].find({
                 "hallcode":hallcode,
                 "machine":machine,
                 "machine_type":machine_type,
@@ -163,11 +163,10 @@ def getData(gh, hallcode, machine_range):
             highest_range = get_highest_range(records_of_the_date)
             if machine_range < highest_range:
                 res['machine_range'] = highest_range
-            con["pachinko_data2"]["data"].update(key, res, upsert=True)
+            con["data"].update(key, res, upsert=True)
         elif time_of_win == 'NaN':
-            con["pachinko_data2"]["data"].update(key, res, upsert=True)
+            con["data"].update(key, res, upsert=True)
         #save hallcode, machine_type, machine if one is new
-        mdb = DBConnection()
         if not mdb.machine_details.find({'hallcode':hallcode}).count():
             mdb.insert_hallcode(hallcode)
         if not mdb.machine_details.find({'machine_type':machine_type, 'ancestors':[hallcode]}):
@@ -175,7 +174,7 @@ def getData(gh, hallcode, machine_range):
         if not mdb.machine_details.find({'machine':machine, 'ancestors':[machine_type, hallcode]}).count():
             mdb.insert_machine(hallcode, machine_type, machine)
     dump["series"] = jackpots
-    con["pachinko_dump2"]["data"].insert(dump)
+    con.db["pachinko_dump2"].insert(dump)
 
 def get_highest_range(records):
     """

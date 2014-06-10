@@ -258,7 +258,7 @@ def getData():
     machinenumber = request.args.get('machinenumber', '')
     chartType = request.args.get('chart', '')
     limit = 100
-    if hallcode or machinetype or machinenumber :
+    if machinenumber :
         limit = 0
     posts= dbConn.getData(startDate,endDate,hallcode,machinetype,machinenumber,limit)
     lst = []
@@ -360,9 +360,11 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
     machines = dbConn.get_machines(hallcode, machinetype, True, startDate, endDate)
     for machine in machines:
         cllc = dbConn.get_collections(startDate,endDate,hallcode,machinetype,machine)
-        length = len(cllc)
         resp = {}
         resp['machine'] = machine
+        
+        ## calcuate range for this date range. It should be an average based on 
+        ## the single highest range of the day 
         ranges = []
         for cl in cllc:
             if cl.has_key('machine_range'):
@@ -370,13 +372,13 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
                     ranges.append(int(cl['machine_range']))
                 except ValueError, err:
                     pass
-                    logging.info( "Range:%s is not a integer." %cl['machine_range'])
+                    #logging.info( "Range:%s is not a integer." %cl['machine_range'])
             elif cl.has_key('range'):
                 try:
                     ranges.append(int(cl['range']))
                 except ValueError, err:
                     pass
-                    logging.info( "Range:%s is not a integer." %cl['range'])
+                    #logging.info( "Range:%s is not a integer." %cl['range'])
         if ranges:
             resp['range'] = int(round(reduce(lambda x,y: x+y, ranges)/len(ranges)))
         else:
