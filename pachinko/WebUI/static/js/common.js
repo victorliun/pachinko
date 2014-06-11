@@ -77,8 +77,9 @@ function show_machine_type()
                 var table_string = "";
                 $.each(data, function(index, val){
                     table_string += "<tr><td>"+val['machine']+ "</td><td>" 
-                        + val['range'] +"</td><td>" + val['win_spin'] 
-                        + "</td><td>" +val['single_win'] + "</td><td>"
+                        + val['cash_result'] + "</td><td>" + val['average_cash_result'] 
+                        + "</td><td>" + val['range'] +"</td><td>" + val['win_spin'] 
+                        + "</td><td>" + val['single_win'] + "</td><td>"
                         + val['renchan'] + "</td><td>" + val['total_win'] +"</td></tr>";
                 });
                 $("div#machine_type_table table tr").slice(1).remove();
@@ -119,8 +120,7 @@ function show_machine_types_from_hallcode()
                 var table_string = "";
                 $.each(data, function(index, val){
                     table_string += "<tr><td>"+val['machine_type']+ "</td><td>"
-                        + val['cash_result'] + "</td><td>" + val['average_cash_result'] 
-                        + "</td><td>" + val['range'] +"</td><td>" + val['win_spin'] 
+                        + val['range'] +"</td><td>" + val['win_spin'] 
                         + "</td><td>" +val['single_win'] + "</td><td>"
                         + val['renchan'] + "</td><td>" + val['total_win'] +"</td></tr>";
                 });
