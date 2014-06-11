@@ -1,4 +1,3 @@
-
 from __future__ import  absolute_import
 from flask import Flask, g, session, redirect, \
         url_for, escape, request, render_template,\
@@ -20,6 +19,7 @@ import urllib
 from datetime import datetime
 import threading
 from multiprocessing import Process
+import itertools
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -358,54 +358,80 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
     """
     res = []
     machines = dbConn.get_machines(hallcode, machinetype, True, startDate, endDate)
+
     for machine in machines:
         cllc = dbConn.get_collections(startDate,endDate,hallcode,machinetype,machine)
+        cllc = add_cash_payout(cllc)
         resp = {}
         resp['machine'] = machine
-        
+        date_range = 0
         ## calcuate range for this date range. It should be an average based on 
         ## the single highest range of the day 
-        ranges = []
-        for cl in cllc:
-            if cl.has_key('machine_range'):
+        max_ranges = []
+        win_spins = []
+        totalwins = 0
+        single_wins  = []
+        cash_result = 0
+        total_renchan_win = 0
+        for the_date, records in itertools.groupby(cllc, lambda x: x['date']):
+            date_range += 1
+            max_range = 0
+
+            for record in records:
+                machine_range = record.get('machine_range', 0)
                 try:
-                    ranges.append(int(cl['machine_range']))
-                except ValueError, err:
-                    pass
-                    #logging.info( "Range:%s is not a integer." %cl['machine_range'])
-            elif cl.has_key('range'):
+                    machine_range = int(machine_range)
+                except ValueError, verr:
+                    machine_range = 0
+                if max_range < machine_range:
+                    max_range = machine_range
+
+                # spin count of win
+                spin_count_of_win = record.get('spin_count_of_win', 0)
                 try:
-                    ranges.append(int(cl['range']))
-                except ValueError, err:
-                    pass
-                    #logging.info( "Range:%s is not a integer." %cl['range'])
-        if ranges:
-            resp['range'] = int(round(reduce(lambda x,y: x+y, ranges)/len(ranges)))
+                    spin_count_of_win = int(spin_count_of_win)
+                except ValueError, verr:
+                    spin_count_of_win = 0
+                win_spins.append(spin_count_of_win)
+
+                # spin count of win
+                spin_count_of_win = record.get('spin_count_of_win', 0)
+                try:
+                    spin_count_of_win = int(spin_count_of_win)
+                except ValueError, verr:
+                    spin_count_of_win = 0
+                win_spins.append(spin_count_of_win)
+                if record['win_number'] not in ('--', 0):
+                    totalwins += 1
+
+                if record['renchan'] == 0 and record['spin_count_of_win'] != '--':
+                    single_wins.append(spin_count_of_win)
+
+                if record['win_number'] in ('--', 0 ) and record['time_of_win'] == 'NaN':
+                    cash_result += record['cash_result']
+
+                if record['renchan'] == 1:
+                    total_renchan_win += 1
+            max_ranges.append(max_range)
+
+        if max_ranges:
+            resp['range'] = int(round(reduce(lambda x,y: x+y, max_ranges)/len(max_ranges)))
         else:
             resp['range'] = 0
-        win_spins = [cl['spin_count_of_win'] for cl in cllc if cl['spin_count_of_win'] != '--']
-        if win_spins:
-            resp['win_spin'] = int(round(reduce(lambda x,y:x+y, win_spins)))
+
+        if win_spins and not totalwins == 0:
+            resp['win_spin'] = int(round(reduce(lambda x,y:x+y, win_spins)/totalwins))
         else:
-            resp['win_spin'] = 0
-        
-        single_wins = [cl['spin_count_of_win'] for cl in cllc \
-            if cl['renchan'] == 0 and cl['spin_count_of_win'] != '--']
+            resp['win_spin'] = 0    
         if single_wins:
             resp['single_win'] = int(round(reduce(lambda x,y:x+y, single_wins)/len(single_wins)))
         else:
             resp['single_win'] = 0
 
-        renchans = [cl['renchan'] for cl in cllc if cl['renchan'] != '--']
-        if renchans:
-            resp['renchan'] = reduce(lambda x,y:x+y, renchans)
-        else:
-            resp['renchan'] = 0
-        totalwins = [cl['win_number'] for cl in cllc if cl['win_number'] != '--']
-        if totalwins:
-            resp['total_win'] = len(totalwins)
-        else:
-            resp['total_win'] = 0
+        resp['renchan'] = total_renchan_win
+        resp['total_win'] = totalwins
+        resp['cash_result'] = cash_result
+        resp['average_cash_result'] = round(cash_result*1.0/date_range, 1)
         res.append(resp)
     return res
 
@@ -455,14 +481,13 @@ def getMachineDetails():
     end_date = request.args.get('endDate', '')
     distinctcol = request.args.get('distinctcol', '')
     if distinctcol == 'machine_type':
-        posts= dbConn.get_machine_types(hallcode, True, start_date, end_date)
+        posts = dbConn.get_machine_types(hallcode, True, start_date, end_date)
     elif distinctcol == 'machine':
         machine_type = request.args.get('machine_type', '')
-        posts= dbConn.get_machines(hallcode, machine_type, True, start_date, end_date)
-    lst = []
-    for post in posts:
-        lst.append(post)
-    return json.dumps(lst, default=json_util.default)
+        posts = dbConn.get_machines(hallcode, machine_type, True, start_date, end_date)
+    else:
+        posts = []
+    return json.dumps(posts, default=json_util.default)
 
 @app.route('/setCrawlerData', methods=['POST','GET'])
 @crossdomain(origin='*')
