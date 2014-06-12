@@ -19,6 +19,7 @@
                                 url: full_url,
                                 //type: 'POST',
                                 dataType: 'json',
+                                timeout: 120000,
                                 success: function(data, textStatus, jqXHR)
                                 {
                                          //data - response from server

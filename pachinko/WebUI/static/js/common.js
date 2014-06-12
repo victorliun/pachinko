@@ -28,6 +28,7 @@ function updateNext(el, nextName) {
         url: full_url,
         //type: 'POST',
         dataType: 'json',
+        timeout: 120000,
         success: function(data, textStatus, jqXHR)
         {
             //data - response from server
@@ -70,6 +71,7 @@ function show_machine_type()
             async: false,
             url: url,
             dataType: 'json',
+            timeout:120000,
             success: function(data, textStatus, jqXHR)
             {
                 $("div#hall_table").hide();
@@ -113,6 +115,7 @@ function show_machine_types_from_hallcode()
             async: false,
             url: url,
             dataType: 'json',
+            timeout:120000,
             success: function(data, textStatus, jqXHR)
             {
                 $("div#tables").hide();
