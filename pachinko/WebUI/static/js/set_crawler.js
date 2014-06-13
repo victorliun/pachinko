@@ -114,6 +114,7 @@ $(document).ready(function(){
     }).autocomplete({
         minLength: 1,
         source: "/get_codes",
+        timeout: 120000,
         select: function( event, ui ) {
             this.value = ui.item.value;
             return false;
@@ -126,6 +127,9 @@ $(document).ready(function(){
                 $("#hallcode_helper").show();
             }
             SetCrawler.enableMachineTypesAutocomplete(this.value);
+        },
+        error: function(err){
+            alert("Timeout error");
         }
 	});
     $("input[name='target_machine_types']").blur(function(){
@@ -151,6 +155,9 @@ $(document).ready(function(){
                     $("#yahoo_helper").hide();
                 }
             },
+            error: function(err){
+                alert("Timeout error");
+            }
         });
     });
     if($("input[name='signal']").val() == "START"){

@@ -181,21 +181,21 @@ function generateChartData(chartType, chartFreq, chrt) {
             chartData[chartType][chartFreq] = [];
 
         for (i = 0; i < data.length; i++) {
-	if(chartFreq=="day"){
-            chartData[chartType][chartFreq].push({
-                //date: getDate(data[i].date),
-                date: parseDate(data[i]["date"], data[i]["time_of_win"]),
-                impressions: data[i]["value"]
-            });
-	    }
-	    else
-	    {
-            chartData[chartType][chartFreq].push({
-                //date: getDate2(data[i].date),
-                date: parseDate2(data[i].date),
-                impressions: data[i][k]
-            });
-	    }
+            if(chartFreq=="day"){
+                chartData[chartType][chartFreq].push({
+                    //date: getDate(data[i].date),
+                    date: parseDate(data[i]["date"], data[i]["time_of_win"]),
+                    impressions: data[i]["value"]
+                });
+    	    }
+    	    else
+    	    {
+                chartData[chartType][chartFreq].push({
+                    //date: getDate2(data[i].date),
+                    date: parseDate2(data[i].date),
+                    impressions: data[i][k]
+                });
+    	    }
 
         }
 	

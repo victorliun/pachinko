@@ -97,8 +97,7 @@ function updateTable(el, nextName) {
     },
     error: function (jqXHR, textStatus, errorThrown)
     {
-      alert(textStatus)
-      alert(jqXHR)
+      alert("Timeout error");
     }
   });
   //create the option list

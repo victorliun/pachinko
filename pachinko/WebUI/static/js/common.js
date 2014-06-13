@@ -36,8 +36,7 @@ function updateNext(el, nextName) {
         },
         error: function (jqXHR, textStatus, errorThrown)
         {
-            alert(textStatus)
-            alert(jqXHR)
+            alert("Timeout error");
         }
     });
     //create the option list
@@ -90,8 +89,7 @@ function show_machine_type()
             },
             error: function (jqXHR, textStatus, errorThrown)
             {
-                alert(textStatus)
-                alert(jqXHR)
+                alert("Timeout error");
             }
         });
     }
@@ -133,8 +131,7 @@ function show_machine_types_from_hallcode()
             },
             error: function (jqXHR, textStatus, errorThrown)
             {
-                alert(textStatus)
-                alert(jqXHR)
+                alert("Timeout error");
             }
         });
     }
