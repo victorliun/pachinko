@@ -143,3 +143,26 @@ function show_machine_types_from_hallcode()
     }
 }
 
+function load_args(){
+    var startDate = $("#arg_startDate").text();
+    if(startDate){
+        $( "#from-datepicker" ).datepicker('setDate', startDate);
+    }
+    var endDate = $("#arg_endDate").text();
+    if(endDate){
+        $( "#to-datepicker" ).datepicker('setDate', endDate);
+    }
+    var hallcode = $("#arg_hallcode").text();
+    if(hallcode){
+        $('#hallcode li[data='+hallcode+']').click();
+    }
+    var machinetype = $("#arg_machinetype").text();
+    if(machinetype){
+        $( "#machinetype li[data='"+machinetype+"']").click();
+    }
+    var machinenumber = $("#arg_machinenumber").text();
+    if(machinenumber){
+        $( "#machinenumber li[data='"+machinenumber+"']" ).click();
+    }
+}
+

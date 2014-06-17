@@ -7,6 +7,8 @@ from settings import *
 
 class DBConnection:
     def __init__(self):
+        # self.client = MongoClient()
+        # self.db = self.client['pachinko_data2']
         self.client = MongoClient(MONGOHQ_URI)
         self.db = self.client.pachinko_systems
         self.machine_details = self.db.machine_details

@@ -158,4 +158,6 @@ $(document).ready(function(){
             $("div#tables").show()
         }      
     });
+
+    setTimeout(load_args(), 5000);
 });

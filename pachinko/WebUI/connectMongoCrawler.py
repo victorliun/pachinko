@@ -7,6 +7,8 @@ from settings import *
 
 class DBCrawlerConnection:
     def __init__(self):
+        # self.client = MongoClient()
+        # self.db = self.client['pachinko_data2']
         self.client = MongoClient(MONGOHQ_URI)
         self.db = self.client['pachinko_systems']
 

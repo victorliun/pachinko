@@ -2,13 +2,12 @@ from __future__ import  absolute_import
 from flask import Flask, g, session, redirect, \
         url_for, escape, request, render_template,\
         make_response, request, current_app
-import os, signal
+import os, signal, ast, json
 import logging
 from functools import update_wrapper
 from datetime import timedelta
 from connectMongo import DBConnection
 from connectMongoCrawler import DBCrawlerConnection
-import json
 from encoder import Encoder
 from bson import json_util
 from functools import wraps
@@ -20,19 +19,43 @@ from datetime import datetime
 import threading
 from multiprocessing import Process
 import itertools
-
+from settings import *
+from session import MongoSessionInterface
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 dbConn = DBConnection()
 dbConn1 = DBCrawlerConnection()
+# enable session
+app.session_interface = MongoSessionInterface(db='pachinko_systems')#, uri=MONGOHQ_URI)
 
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
             return redirect(url_for('login', next=request.url))
-        return f(*args, **kwargs)
+        else:
+            return f(*args, **kwargs)
     return decorated_function
+
+@app.after_request
+def update_sessions(response):
+    ignore_list = ('/static', '/login','/logout',
+            "/getHallcode", '/getMachineDetails', 
+            "/check_yahoo_account",)
+    url_rule = request.url_rule
+    if url_rule and request.method == 'GET':
+        rule = url_rule.rule
+        if rule == '/':
+            return response
+        if not rule.startswith(ignore_list): 
+            if rule.startswith(('/Data', '/get_machine_type_details')):
+                session['args'] = request.args.to_dict()
+            else:
+                session['url'] = rule
+                session['endpoint'] = url_rule.endpoint 
+                session['args'] = request.args.to_dict()
+            session.modified = True
+    return response
 
 
 def get_next_run_time():
@@ -109,7 +132,10 @@ def login():
         if(request.form['username'] == 'app' and request.form['password'] == 'password'):
             session['username'] = request.form['username']
             next = request.args.get('next')
-            if not next:
+            endpoint = session.get('endpoint','')
+            if endpoint:
+                return redirect(url_for(endpoint, message=session.get('args')))
+            elif not next:
                 next = '/home'
             else:
                 next = next.split('/',3)[-1]
@@ -130,7 +156,10 @@ def home():
 @app.route('/analysis')
 @login_required
 def analysis():
-    return render_template('get_data.html')
+    message = request.args.get('message')
+    if message:
+        message = ast.literal_eval(message)
+    return render_template('get_data.html', message=message)
 
 @app.route('/set-crawler', methods=['POST','GET'])
 @login_required
@@ -193,7 +222,10 @@ def update():
 @app.route('/view-graphs')
 @login_required
 def view_grahps():
-    return render_template('view_machine_graphs.html')
+    message = request.args.get('message')
+    if message:
+        message = ast.literal_eval(message)
+    return render_template('view_machine_graphs.html', message=message)
 
 
 @app.route('/viewData')

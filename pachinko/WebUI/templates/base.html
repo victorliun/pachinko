@@ -24,6 +24,13 @@
       <div class="content">
         {%block content%}{%endblock%}
       </div>
+      {%if message %}
+      <div id='last_args' style='display: none' >
+        {%for arg in message.iteritems() %}
+        <div id="arg_{{arg[0]}}">{{arg[1]}}</div>
+        {%endfor%}
+      </div>
+      {%endif%}
     </div>
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>

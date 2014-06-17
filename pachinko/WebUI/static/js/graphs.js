@@ -27,7 +27,6 @@ $(document).ready(function(){
     else
         $( "#to-datepicker" ).datepicker('setDate', getDateFormat(now));
     updateNext('hallcode','hallcode');
-
     $("a#by_hall").parent().hover(function(){
         $("#hallcode").show();
     }, function(){
@@ -175,4 +174,5 @@ $(document).ready(function(){
     });
 
     generateChartsOnDropDownChange();
+    setTimeout(load_args(), 5000);
 })
