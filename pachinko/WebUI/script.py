@@ -26,7 +26,7 @@ app.secret_key = os.urandom(24)
 dbConn = DBConnection()
 dbConn1 = DBCrawlerConnection()
 # enable session
-app.session_interface = MongoSessionInterface(db='pachinko_systems')#, uri=MONGOHQ_URI)
+app.session_interface = MongoSessionInterface(db='pachinko_systems', uri=MONGOHQ_URI)
 
 def login_required(f):
     @wraps(f)
