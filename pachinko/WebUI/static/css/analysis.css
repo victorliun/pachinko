@@ -66,6 +66,9 @@ div#machine_type_table  table, div#hall_table table{
 
 table td {
     height: 16px;
+    text-align: center;
+    font-weight: 600;
+    font-size: larger;
 }
 
 table#averages{
@@ -76,6 +79,10 @@ table#averages{
 table#tabledata{
     margin:20px auto;
     width: 90%;
+}
+
+tr.grey_bkc {
+background-color: lightgray;
 }
 
 ul#hallcode, ul#machinetype, ul#machinenumber{

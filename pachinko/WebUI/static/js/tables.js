@@ -137,8 +137,10 @@ function updateTable(el, nextName) {
       closing_spins[obj.date] = obj.spin_count_of_win;
     if(obj.renchan == 0)
       single_wins.push(obj.spin_count_of_win);
-    
-    txtStrng += "<tr>";
+    if (idx % 2 == 0)
+      txtStrng += "<tr class='grey_bkc'>";
+    else
+      txtStrng += "<tr>";
     txtStrng += "<td>"+obj.date + "</td>" ;
     txtStrng += "<td>"+obj.renchan + "</td>" ;
     txtStrng += "<td>"+win_number + "</td>" ;

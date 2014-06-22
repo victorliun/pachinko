@@ -463,7 +463,7 @@ def summary_machine_data(startDate,endDate,hallcode,machinetype):
         resp['renchan'] = total_renchan_win
         resp['total_win'] = totalwins
         resp['cash_result'] = cash_result
-        resp['average_cash_result'] = round(cash_result*1.0/date_range, 1)
+        resp['average_cash_result'] = round(cash_result*1.0/date_range)
         res.append(resp)
     return res
 

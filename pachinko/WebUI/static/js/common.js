@@ -77,7 +77,11 @@ function show_machine_type()
                 $("div#tables").hide();
                 var table_string = "";
                 $.each(data, function(index, val){
-                    table_string += "<tr><td>"+val['machine']+ "</td><td>" 
+                    if (index % 2 == 0)
+                      table_string += "<tr class='grey_bkc'>";
+                    else
+                      table_string += "<tr>";
+                    table_string += "<td>"+val['machine']+ "</td><td>" 
                         + val['cash_result'] + "</td><td>" + val['average_cash_result'] 
                         + "</td><td>" + val['range'] +"</td><td>" + val['win_spin'] 
                         + "</td><td>" + val['single_win'] + "</td><td>"
@@ -120,6 +124,10 @@ function show_machine_types_from_hallcode()
                 $("div#machine_type_table").hide()
                 var table_string = "";
                 $.each(data, function(index, val){
+                    if (index % 2 == 0)
+                      table_string += "<tr class='grey_bkc'>";
+                    else
+                      table_string += "<tr>";
                     table_string += "<tr><td>"+val['machine_type']+ "</td><td>"
                         + val['range'] +"</td><td>" + val['win_spin'] 
                         + "</td><td>" +val['single_win'] + "</td><td>"
