@@ -128,7 +128,7 @@ function show_machine_types_from_hallcode()
                       table_string += "<tr class='grey_bkc'>";
                     else
                       table_string += "<tr>";
-                    table_string += "<tr><td>"+val['machine_type']+ "</td><td>"
+                    table_string += "<td>"+val['machine_type']+ "</td><td>"
                         + val['range'] +"</td><td>" + val['win_spin'] 
                         + "</td><td>" +val['single_win'] + "</td><td>"
                         + val['renchan'] + "</td><td>" + val['total_win'] +"</td></tr>";
