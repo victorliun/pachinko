@@ -46,9 +46,19 @@ function updateNext(el, nextName) {
         txtStrng += val ;
         txtStrng += "</li>";
     });
-     //clear the option list
-     $('#'+nextName).text('');
-     $('#'+nextName).prev().text('None');
+    if (nextName == "hallcode"){
+        var selected_hall = $("#hallcode li.selected").text();
+        if (options.indexOf(selected_hall) == -1){
+            //clear the option list
+            $('#'+nextName).text('');
+            $('#'+nextName).prev().text('None');
+        }
+    }
+    else {
+        //clear the option list
+        $('#'+nextName).text('');
+        $('#'+nextName).prev().text('None');
+    }
     //attach the option list
     $(txtStrng).appendTo('#'+nextName);
 
