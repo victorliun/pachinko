@@ -39,26 +39,22 @@ function updateNext(el, nextName) {
             alert("Timeout error");
         }
     });
+    var selected_hall = $("#hallcode li.selected").text();
     //create the option list
     txtStrng += "<li data='blank'>None</li>";
     $.each( options, function(i,val) {
-        txtStrng += "<li data='" + val + "'>";
+        if (val == selected_hall){
+            txtStrng += "<li data='" + val + "' class='selected'>";
+        }
+        else
+            txtStrng += "<li data='" + val + "'>";
         txtStrng += val ;
         txtStrng += "</li>";
     });
-    if (nextName == "hallcode"){
-        var selected_hall = $("#hallcode li.selected").text();
-        if (options.indexOf(selected_hall) == -1){
-            //clear the option list
-            $('#'+nextName).text('');
-            $('#'+nextName).prev().text('None');
-        }
-    }
-    else {
-        //clear the option list
-        $('#'+nextName).text('');
+    if (nextName == "hallcode" && options.indexOf(selected_hall) == -1){
         $('#'+nextName).prev().text('None');
     }
+    $('#'+nextName).text('');
     //attach the option list
     $(txtStrng).appendTo('#'+nextName);
 
