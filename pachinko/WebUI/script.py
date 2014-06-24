@@ -379,6 +379,8 @@ def get_machine_type_details():
             machine_type_data['renchan'] = int(round(reduce(lambda x,y: x+y, machine_renchan)/len(machine_renchan)))
             machine_total_win = [ machine['total_win'] for machine in machine_datas]
             machine_type_data['total_win'] = int(round(reduce(lambda x,y: x+y, machine_total_win)))
+            machine_type_data['cash_result']  = reduce(lambda x, y: x+y, [machine['cash_result'] for machine in machine_datas])
+            machine_type_data['average_cash_result']  = reduce(lambda x, y: x+y, [machine['cash_averages'] for machine in machine_datas])
             res.append(machine_type_data)
 
     return json.dumps(res, default=json_util.default)
