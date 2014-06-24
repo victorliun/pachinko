@@ -135,7 +135,8 @@ function show_machine_types_from_hallcode()
                     else
                       table_string += "<tr>";
                     table_string += "<td>"+val['machine_type']+ "</td><td>"
-                        + val['range'] +"</td><td>" + val['win_spin'] 
+                        + val['range'] +"</td><td>" + val['cash_result'] 
+                        + "</td><td>" + val['average_cash_result'] +"</td><td>" + val['win_spin'] 
                         + "</td><td>" +val['single_win'] + "</td><td>"
                         + val['renchan'] + "</td><td>" + val['total_win'] +"</td></tr>";
                 });
