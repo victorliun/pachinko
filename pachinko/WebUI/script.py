@@ -294,6 +294,13 @@ def getData():
         limit = 0
     posts= dbConn.getData(startDate,endDate,hallcode,machinetype,machinenumber,limit)
     lst = []
+
+    #CASE: Analysis page
+    for post in posts:
+        lst.append(post)
+    if machinenumber and machinetype and hallcode:
+        lst = add_cash_payout(lst)
+             
     spincount = []
     if len(chartType) > 0:
         spincount = getSpinCount(posts)
@@ -338,12 +345,14 @@ def getData():
             rec["time_of_win"] = ""
             rec["value"] = s["totalwins"]
             lst.append(rec)
-    else:
-        #CASE: Analysis page
-        for post in posts:
-            lst.append(post)
-        if machinenumber and machinetype and hallcode:
-            lst = add_cash_payout(lst)
+    elif chartType == 'cashresultcount':
+        for s in spincount:
+            rec = {}
+            rec["date"] = s["date"]
+            rec["time_of_win"] = ""
+            rec["value"] = s["cash_result"]
+            lst.append(rec)
+        
 
     #return json.dumps(lst, cls=Encoder)
     return json.dumps(lst, default=json_util.default)

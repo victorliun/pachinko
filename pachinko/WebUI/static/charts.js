@@ -1,7 +1,7 @@
 var chartData = {};
 var chartCursor;
 
-var diffCharts = ["spincount", "winspincount", "closingspincount", "singlewinsspincount", "renchan" ,"totalwins"];
+var diffCharts = ["spincount", "winspincount", "closingspincount", "singlewinsspincount", "renchan" ,"totalwins", 'cashresult'];
 var diffFreq = ["day"];
 
 var chartDates = {}
@@ -175,6 +175,8 @@ function generateChartData(chartType, chartFreq, chrt) {
         k = "renchan";
     else if(chartType == "totalwins")
         k = "machine";
+    else if(chartType == 'cashresult')
+        k = 'cash_result'
     //console.log(chartType + " " + chartFreq)
     var startDate =  chartDates[chartType][chartFreq]["from"]; //"2014-01-07";
     var endDate = chartDates[chartType][chartFreq]["to"]; //"2014-02-08";
@@ -196,7 +198,7 @@ function generateChartData(chartType, chartFreq, chrt) {
             chartData[chartType][chartFreq] = [];
 
         for (i = 0; i < data.length; i++) {
-	if(chartFreq=="day"){
+	        if(chartFreq=="day"){
             chartData[chartType][chartFreq].push({
                 //date: getDate(data[i].date),
                 date: parseDate(data[i]["date"], data[i]["time_of_win"]),
