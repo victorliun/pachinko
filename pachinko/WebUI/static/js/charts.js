@@ -1,7 +1,7 @@
 var chartData = {};
 var chartCursor;
 
-var diffCharts = ["spincount", "winspincount", "closingspincount", "singlewinsspincount", "renchan" ,"totalwins", 'cashresult'];
+var diffCharts = ["spincount", "winspincount", "closingspincount", "singlewinsspincount", "renchan" ,"totalwins", 'cashresultcount'];
 var diffFreq = ["day"];
 
 var chartDates = {}

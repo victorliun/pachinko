@@ -78,11 +78,11 @@ function updateTable(el, nextName) {
     return;
   }
   if(hallcode && machinetype && machinenumber && $('table#tabledata thead tr:first th').length < 12 ){
-    $("table#tabledata thead tr:first th:nth-child(5)").after("<th>Cash+/- </th> \
-            <th>Balls+/- </th> \
-            <th>Balls Won to this point </th> \
-            <th>Cashout at this point </th> \
-            <th>Cash Result </th>");
+    $("table#tabledata thead tr:first th:nth-child(5)").after("<th>Cash In</th> \
+            <th>Balls In </th> \
+            <th>Balls Won</th> \
+            <th>Cashout</th> \
+            <th>Cash Result</th>");
   }
   //grab ajax data
   $.ajax({
@@ -141,7 +141,9 @@ function updateTable(el, nextName) {
       txtStrng += "<tr class='grey_bkc'>";
     else
       txtStrng += "<tr>";
-    txtStrng += "<td>"+obj.date + "</td>" ;
+    var the_date = new Date(obj.date);
+    var date_string = the_date.toString().substring(0,4) + d.toISOString().substring(5,10);
+    txtStrng += "<td>"+date_string + "</td>" ;
     txtStrng += "<td>"+obj.renchan + "</td>" ;
     txtStrng += "<td>"+win_number + "</td>" ;
     txtStrng += "<td>"+time_of_win + "</td>" ;

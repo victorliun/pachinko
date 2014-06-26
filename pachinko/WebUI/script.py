@@ -244,6 +244,7 @@ def getSpinCount(data):
     renchan_wins = defaultdict(list)
     renchan_count = defaultdict(int)
     totalwins = defaultdict(int)
+    cash_result = defaultdict(int)
     ret = []
     for post in data:
         dt = post["date"]
@@ -265,6 +266,7 @@ def getSpinCount(data):
             renchan_count[dt] += post["renchan"]
         if post["win_number"] != 0:
             totalwins[dt] += 1
+        cash_result[dt] = post['cash_result']
             
     for c in sorted(c_cnt.keys()):
         r = {}
@@ -276,6 +278,7 @@ def getSpinCount(data):
         r["singlewinsspincount"] = renchan_wins.get(c, '')
         r["renchan"] = renchan_count.get(c, '')
         r["totalwins"] = totalwins[c]
+        r['cash_result'] = cash_result.get(c, 0)
 
         ret.append(r)
     return ret
@@ -294,16 +297,17 @@ def getData():
         limit = 0
     posts= dbConn.getData(startDate,endDate,hallcode,machinetype,machinenumber,limit)
     lst = []
-
-    #CASE: Analysis page
-    for post in posts:
-        lst.append(post)
-    if machinenumber and machinetype and hallcode:
-        lst = add_cash_payout(lst)
              
     spincount = []
     if len(chartType) > 0:
+        posts = add_cash_payout(list(posts))   
         spincount = getSpinCount(posts)
+    else:
+        #CASE: Analysis page
+        for post in posts:
+            lst.append(post)
+        if machinenumber and machinetype and hallcode:
+            lst = add_cash_payout(lst)
     if chartType == 'spincount':
         lst = spincount
     elif chartType == 'winspincount':
@@ -346,13 +350,14 @@ def getData():
             rec["value"] = s["totalwins"]
             lst.append(rec)
     elif chartType == 'cashresultcount':
+
         for s in spincount:
             rec = {}
             rec["date"] = s["date"]
             rec["time_of_win"] = ""
             rec["value"] = s["cash_result"]
             lst.append(rec)
-        
+    
 
     #return json.dumps(lst, cls=Encoder)
     return json.dumps(lst, default=json_util.default)
