@@ -266,7 +266,7 @@ def getSpinCount(data):
             renchan_count[dt] += post["renchan"]
         if post["win_number"] != 0:
             totalwins[dt] += 1
-        cash_result[dt] = post['cash_result']
+        cash_result[dt] = post.get('cash_result', 0)
             
     for c in sorted(c_cnt.keys()):
         r = {}
