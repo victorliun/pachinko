@@ -158,7 +158,7 @@ function generateChartData(chartType, chartFreq, chrt) {
         k = "renchan";
     else if(chartType == "totalwins")
         k = "machine";
-    else if(chartType == "cashresult")
+    else if(chartType == "cashresultcount")
         k = "cash_result";
     //console.log(chartType + " " + chartFreq)
     //var startDate =  chartDates[chartType][chartFreq]["from"]; //"2014-01-07";
