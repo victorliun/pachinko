@@ -142,7 +142,7 @@ function updateTable(el, nextName) {
     else
       txtStrng += "<tr>";
     var the_date = new Date(obj.date);
-    var date_string = the_date.toString().substring(0,4) + d.toISOString().substring(5,10);
+    var date_string = the_date.toString().substring(0,4) + the_date.toISOString().substring(5,10);
     txtStrng += "<td>"+date_string + "</td>" ;
     txtStrng += "<td>"+obj.renchan + "</td>" ;
     txtStrng += "<td>"+win_number + "</td>" ;
